@@ -1,0 +1,64 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="zyon.notifier">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:allowBackup="false"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".Activity_Main"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="play.google.com" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity_Menu_Info"
+            android:label="@string/menu_info" />
+        <activity
+            android:name=".Activity_Menu_Set"
+            android:label="@string/menu_set" />
+        <activity
+            android:name=".Activity_Dialog_Add"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".Activity_Dialog_Edit"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateVisible" />
+
+        <service android:name=".Service_Noti" />
+        <service android:name=".Service_QA" />
+        <service android:name=".Service_Revive" />
+
+        <receiver android:name=".Receiver_Start">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

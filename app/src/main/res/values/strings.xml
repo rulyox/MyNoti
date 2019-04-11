@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">My Noti</string>
+    <string name="app_ver">1.4.1</string>
+    <string name="menu_info">Information</string>
+    <string name="menu_set">Settings</string>
+    <string name="menu_reset">Reset settings</string>
+    <string name="main_notifications">Notifications</string>
+    <string name="main_modify">Modify</string>
+    <string name="main_delete">Delete</string>
+    <string name="qa">Quick Add</string>
+    <string name="qa_text">Click here to add a notification.</string>
+    <string name="alert_added">Notification added.</string>
+    <string name="alert_modified">Notification modified.</string>
+    <string name="alert_deleted">Notification deleted.</string>
+    <string name="alert_canceled">Canceled.</string>
+    <string name="alert_qa_en">Pull down the status bar.</string>
+    <string name="alert_qa_dis">Quick Add is disabled.</string>
+    <string name="alert_noemail">No email app is installed on this device.</string>
+    <string name="dialog_title">New notification</string>
+    <string name="dialog_titlehint">Write title.</string>
+    <string name="dialog_texthint">Write text.</string>
+    <string name="dialog_color">Choose color</string>
+    <string name="dialog_add">Add</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="info_aboutapp">About App</string>
+    <string name="info_developer">Developer</string>
+    <string name="info_zyon">Zyon</string>
+    <string name="info_contact">Contacts</string>
+    <string name="info_email">zyon3075@naver.com</string>
+    <string name="info_send">Send email to developer</string>
+    <string name="set_noti">Notifications</string>
+    <string name="set_noticolor">Choose default color</string>
+    <string name="set_showtime">Show time in notifications</string>
+    <string name="set_enableqa">Enable</string>
+    <string name="set_qacolor">Choose color</string>
+</resources>

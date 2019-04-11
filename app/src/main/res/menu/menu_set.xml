@@ -1,0 +1,12 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_reset"
+        android:orderInCategory="0"
+        android:icon="@drawable/menu_reset"
+        android:title="@string/menu_reset"
+        app:showAsAction="ifRoom" />
+
+</menu>
