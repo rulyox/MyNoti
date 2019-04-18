@@ -16,8 +16,7 @@ public class Activity_Dialog_Edit extends Activity {
 
     // 데이터베이스
     final static String TABLE_NAME = "NOTI";
-    DB_Helper mHelper;
-    SQLiteDatabase db;
+    SQLiteDatabase DB;
 
     String title_string;
     String text_string;
@@ -35,8 +34,7 @@ public class Activity_Dialog_Edit extends Activity {
         setContentView(R.layout.dialog_edit);
 
         // 데이터베이스
-        mHelper = new DB_Helper(this);
-        db = mHelper.getWritableDatabase();
+        DB = new DB_Helper(this).getWritableDatabase();
 
         set();
 
@@ -89,8 +87,8 @@ public class Activity_Dialog_Edit extends Activity {
                 text_string = DialogText.getText().toString();
 
                 // 데이터베이스 수정
-                db.execSQL( "DELETE FROM " + TABLE_NAME + " WHERE _id = " + noti_id + ";" );
-                db.execSQL( "INSERT INTO " + TABLE_NAME + " VALUES ( " + noti_id + ", '" + title_string + "', '" + text_string + "', '" + color_string + "' );" );
+                DB.execSQL( "DELETE FROM " + TABLE_NAME + " WHERE _id = " + noti_id + ";" );
+                DB.execSQL( "INSERT INTO " + TABLE_NAME + " VALUES ( " + noti_id + ", '" + title_string + "', '" + text_string + "', '" + color_string + "' );" );
 
                 // 알림 생성
                 Intent notify = new Intent(Activity_Dialog_Edit.this, Service_Noti.class);

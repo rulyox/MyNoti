@@ -23,19 +23,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class Activity_Main extends AppCompatActivity {
 
     // 데이터베이스
     final static String TABLE_NAME = "NOTI";
-    DB_Helper mHelper;
-    SQLiteDatabase db;
-    Cursor cursor;
+    SQLiteDatabase DB;
 
     // 리싸이클러뷰
     RecyclerView mRecyclerView;
-    LinearLayoutManager mLinearLayoutManager;
     ArrayList<List_Main> mArrayList;
     Adapter_Main mAdapter;
 
@@ -48,26 +44,26 @@ public class Activity_Main extends AppCompatActivity {
 
         registerReceiver(finishActivity, new IntentFilter("FINISH_ACTIVITY"));
 
-        //추가 버튼
+        // 추가 버튼
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent dialog = new Intent(Activity_Main.this, Activity_Dialog_Add.class);
-                startActivityForResult(dialog,1);
+                startActivityForResult(
+                        new Intent(Activity_Main.this, Activity_Dialog_Add.class),
+                        1
+                );
             }
         });
 
-        //데이터베이스
-        mHelper = new DB_Helper(this);
-        db = mHelper.getWritableDatabase();
-        cursor = db.rawQuery( String.format( "SELECT * FROM %s", TABLE_NAME ), null );
+        // 데이터베이스
+        DB = new DB_Helper(this).getWritableDatabase();
 
+        setRecycler();
         setList();
 
-        //알림 복구
-        Intent revive = new Intent(this, Service_Revive.class);
-        startService(revive);
+        // 알림 복구
+        startService( new Intent(this, Service_Revive.class) );
 
     }
 
@@ -83,12 +79,10 @@ public class Activity_Main extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_info) {
-            Intent info = new Intent(this, Activity_Menu_Info.class);
-            startActivity(info);
+            startActivity( new Intent(this, Activity_Menu_Info.class) );
             return true;
         }else if (id == R.id.menu_set) {
-            Intent set = new Intent(this, Activity_Menu_Set.class);
-            startActivity(set);
+            startActivity( new Intent(this, Activity_Menu_Set.class) );
             return true;
         }
 
@@ -114,15 +108,14 @@ public class Activity_Main extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
+        if(resultCode == RESULT_OK) {
 
-            refreshList();
+            setList();
 
             if(requestCode == 1) Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_added), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             else if(requestCode == 2) Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_modified), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
-        }
-        else{
+        } else {
 
             Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_canceled), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
@@ -130,69 +123,47 @@ public class Activity_Main extends AppCompatActivity {
 
     }
 
-    void setList(){
+    void setRecycler() {
 
         mRecyclerView = findViewById(R.id.list_main_recycler);
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager( new LinearLayoutManager(this) );
+        mRecyclerView.addItemDecoration( new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL) );
+
+    }
+
+    void setList() {
+
         mArrayList = new ArrayList<>();
-        mAdapter = new Adapter_Main(mArrayList, this);
 
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(), mLinearLayoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
-
-        Cursor c = cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor c = DB.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         c.moveToFirst();
 
-        for (int i = 0; i < c.getCount(); i++) {
+        for(int i = 0; i < c.getCount(); i++) {
 
-            List_Main item =
-                    new List_Main(c.getString( c.getColumnIndex( "KEY_COLOR" ) ), c.getString( c.getColumnIndex( "KEY_TITLE" ) ),
-                            c.getString( c.getColumnIndex( "KEY_TEXT" ) ));
-            mArrayList.add(item);
+            mArrayList.add(
+                    new List_Main(
+                            c.getString( c.getColumnIndex( "KEY_COLOR" ) ),
+                            c.getString( c.getColumnIndex( "KEY_TITLE" ) ),
+                            c.getString( c.getColumnIndex( "KEY_TEXT" ) )
+                    )
+            );
 
             c.moveToNext();
 
         }
 
-        mAdapter.notifyDataSetChanged();
+        c.close();
 
-    }
-
-    void refreshList(){
-
-        mRecyclerView = findViewById(R.id.list_main_recycler);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mArrayList = new ArrayList<>();
         mAdapter = new Adapter_Main(mArrayList, this);
-
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-        Cursor c = cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        c.moveToFirst();
-
-        for (int i = 0; i < c.getCount(); i++) {
-
-            List_Main item =
-                    new List_Main(c.getString( c.getColumnIndex( "KEY_COLOR" ) ), c.getString( c.getColumnIndex( "KEY_TITLE" ) ),
-                            c.getString( c.getColumnIndex( "KEY_TEXT" ) ));
-            mArrayList.add(item);
-
-            c.moveToNext();
-
-        }
-
         mAdapter.notifyDataSetChanged();
 
     }
 
-    //알림 수정, 삭제
-    void Edit(final int pos){
+    // 알림 수정, 삭제
+    void Edit(final int pos) {
 
-        final Cursor c = cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor c = DB.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         c.moveToFirst();
 
         for(int i = 0; i < pos; i++) c.moveToNext();
@@ -201,35 +172,39 @@ public class Activity_Main extends AppCompatActivity {
         final String DBtext = c.getString( c.getColumnIndex( "KEY_TEXT" ) );
         final String DBcolor = c.getString( c.getColumnIndex( "KEY_COLOR" ) );
 
+        c.close();
+
         CharSequence[] items = new String[] { getString(R.string.main_modify), getString(R.string.main_delete) };
 
-        //선택창
+        // 선택창
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Activity_Main.this);
         alertDialogBuilder.setItems(items,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        if(id == 0) { //수정
+                        if(id == 0) { // 수정
 
-                            Intent dialogInt = new Intent(Activity_Main.this, Activity_Dialog_Edit.class);
-                            dialogInt.putExtra("title", DBtitle);
-                            dialogInt.putExtra("text", DBtext);
-                            dialogInt.putExtra("color", DBcolor);
-                            dialogInt.putExtra("noti_id", DBid);
-                            startActivityForResult(dialogInt,2);
+                            startActivityForResult(
+                                    new Intent(Activity_Main.this, Activity_Dialog_Edit.class)
+                                            .putExtra("title", DBtitle)
+                                            .putExtra("text", DBtext)
+                                            .putExtra("color", DBcolor)
+                                            .putExtra("noti_id", DBid),
+                                    2
+                            );
 
-                        }else if(id == 1) { //삭제
+                        } else if(id == 1) { // 삭제
 
-                            //알림 삭제
-                            Intent notify = new Intent(Activity_Main.this, Service_Noti.class);
-                            notify.putExtra("id", -1*(int)DBid+"");
-                            startService(notify);
+                            // 알림 삭제
+                            startService(
+                                    new Intent(Activity_Main.this, Service_Noti.class)
+                                            .putExtra("id", -1*(int)DBid+"")
+                            );
 
-                            //데이터베이스 삭제
-                            String query = String.format(Locale.ENGLISH, "DELETE FROM %s WHERE _id = %d;", TABLE_NAME, DBid );
-                            db.execSQL( query );
+                            // 데이터베이스 삭제
+                            DB.execSQL( "DELETE FROM " + TABLE_NAME + " WHERE _id = " + DBid + ";" );
 
-                            refreshList();
+                            setList();
                             Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_deleted), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
                         }

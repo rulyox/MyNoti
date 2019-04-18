@@ -18,8 +18,7 @@ public class Activity_Dialog_Add extends Activity {
 
     // 데이터베이스
     final static String TABLE_NAME = "NOTI";
-    DB_Helper mHelper;
-    SQLiteDatabase db;
+    SQLiteDatabase DB;
 
     // 프리퍼런스
     SharedPreferences prefs;
@@ -50,8 +49,7 @@ public class Activity_Dialog_Add extends Activity {
         notificationNumber = prefs.getInt("notificationNumber", 1);
 
         // 데이터베이스
-        mHelper = new DB_Helper(this);
-        db = mHelper.getWritableDatabase();
+        DB = new DB_Helper(this).getWritableDatabase();
 
         set();
 
@@ -97,7 +95,7 @@ public class Activity_Dialog_Add extends Activity {
                 //추가되는 데이터 아이디(알림 카운터) : notificationNumber
 
                 // 데이터베이스에 추가
-                db.execSQL( "INSERT INTO " + TABLE_NAME + " VALUES ( " + notificationNumber + ", '" + title_string + "', '" + text_string + "', '" + color_string + "' );" );
+                DB.execSQL( "INSERT INTO " + TABLE_NAME + " VALUES ( " + notificationNumber + ", '" + title_string + "', '" + text_string + "', '" + color_string + "' );" );
 
                 // 알림 생성
                 Intent notify = new Intent(Activity_Dialog_Add.this, Service_Noti.class);
