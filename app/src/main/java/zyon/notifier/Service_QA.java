@@ -17,15 +17,8 @@ import androidx.core.app.NotificationCompat;
 
 public class Service_QA extends Service {
 
-    Notification QANoti;
-    NotificationManager NotiMgr;
     String CHANNEL_ID = "Channel_QA";
-
-    SharedPreferences prefs;
-    int qa_bool;
-    String qa_color;
-
-    int check;
+    String color;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,13 +28,10 @@ public class Service_QA extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        prefs = getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
-        qa_bool = prefs.getInt("quickaddBoolean", 0);
-        qa_color = prefs.getString("quickaddColor", "#FF4081");
+        SharedPreferences prefs = getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
+        color = prefs.getString("quickaddColor", "#FF4081");
 
-        check = Integer.parseInt( intent.getStringExtra("check") );
-
-        NotiMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        int check = Integer.parseInt( intent.getStringExtra("check") );
         QuickAdd( check != 0 );
 
         this.stopSelf();
@@ -52,6 +42,9 @@ public class Service_QA extends Service {
 
     void QuickAdd(boolean checked){
 
+        Notification Noti;
+        NotificationManager NotiMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         if(checked){
 
             Intent QuickAddIntent = new Intent(this, Activity_Dialog_Add.class);
@@ -60,7 +53,7 @@ public class Service_QA extends Service {
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                QANoti =  new NotificationCompat.Builder(this, CHANNEL_ID)
+                Noti =  new NotificationCompat.Builder(this, CHANNEL_ID)
                         .setContentTitle(getString(R.string.qa))
                         .setContentText(getString(R.string.qa_text))
                         .setSmallIcon(R.drawable.button_add)
@@ -68,18 +61,18 @@ public class Service_QA extends Service {
                         .setOngoing(true)
                         .setShowWhen(false)
                         .setContentIntent(Intent)
-                        .setColor( Color.parseColor(qa_color) )
+                        .setColor( Color.parseColor(color) )
                         .setGroup(""+0)
                         .setChannelId(CHANNEL_ID)
                         .build();
-                QANoti.flags = Notification.FLAG_NO_CLEAR;
+                Noti.flags = Notification.FLAG_NO_CLEAR;
                 NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, getResources().getString(R.string.qa), NotificationManager.IMPORTANCE_MIN);
                 NotiMgr.createNotificationChannel(mChannel);
-                NotiMgr.notify(0 , QANoti);
+                NotiMgr.notify(0 , Noti);
 
             }else{
 
-                QANoti = new Notification.Builder(getApplicationContext())
+                Noti = new Notification.Builder(getApplicationContext())
                         .setContentTitle(getString(R.string.qa))
                         .setContentText(getString(R.string.qa_text))
                         .setSmallIcon(R.drawable.button_add)
@@ -88,15 +81,15 @@ public class Service_QA extends Service {
                         .setShowWhen(false)
                         .setPriority(Notification.PRIORITY_MIN)
                         .setContentIntent(Intent)
-                        .setColor( Color.parseColor(qa_color) )
+                        .setColor( Color.parseColor(color) )
                         .setGroup(""+0)
                         .build();
-                QANoti.flags = Notification.FLAG_NO_CLEAR;
-                NotiMgr.notify(0, QANoti);
+                Noti.flags = Notification.FLAG_NO_CLEAR;
+                NotiMgr.notify(0, Noti);
 
             }
 
-        }else{ NotiMgr.cancel(0); }
+        } else { NotiMgr.cancel(0); }
 
     }
 

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -22,7 +23,6 @@ public class Activity_Menu_Info extends AppCompatActivity {
 
     // 리싸이클러뷰
     RecyclerView mRecyclerView;
-    LinearLayoutManager mLinearLayoutManager;
     ArrayList<List_Info> mArrayList;
     Adapter_Info mAdapter;
 
@@ -34,6 +34,7 @@ public class Activity_Menu_Info extends AppCompatActivity {
 
         registerReceiver(finishActivity, new IntentFilter("FINISH_ACTIVITY"));
 
+        setRecycler();
         setList();
 
     }
@@ -63,18 +64,18 @@ public class Activity_Menu_Info extends AppCompatActivity {
         }
     };
 
-    void setList(){
+    void setRecycler() {
 
         mRecyclerView = findViewById(R.id.list_info_recycler);
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager( new LinearLayoutManager(this) );
+        mRecyclerView.addItemDecoration( new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL) );
+
+    }
+
+    void setList() {
+
+
         mArrayList = new ArrayList<>();
-        mAdapter = new Adapter_Info(mArrayList, this);
-
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(), mLinearLayoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         List_Info item1 = new List_Info(getResources().getDrawable(R.drawable.info_app), getString(R.string.app_name), getString(R.string.app_ver));
         List_Info item2 = new List_Info(getResources().getDrawable(R.drawable.info_zyon), getString(R.string.info_developer), getString(R.string.info_zyon));
@@ -83,11 +84,13 @@ public class Activity_Menu_Info extends AppCompatActivity {
         mArrayList.add(item2);
         mArrayList.add(item3);
 
+        mAdapter = new Adapter_Info(mArrayList, this);
+        mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
     }
 
-    void clickList(int pos){
+    void clickList(int pos) {
 
         if(pos == 2){
 
@@ -100,10 +103,11 @@ public class Activity_Menu_Info extends AppCompatActivity {
 
                 try {
 
-                    Intent chooser = Intent.createChooser(email, getString(R.string.info_send));
-                    startActivity(chooser);
+                    startActivity(
+                            Intent.createChooser(email, getString(R.string.info_send))
+                    );
 
-                } catch (ActivityNotFoundException ignored) { }
+                } catch(ActivityNotFoundException e) { Log.d("Zyon", e.toString()); }
 
             }
             else Toast.makeText (Activity_Menu_Info.this, getString(R.string.alert_noemail), Toast.LENGTH_LONG).show();

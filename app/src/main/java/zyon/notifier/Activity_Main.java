@@ -167,18 +167,17 @@ public class Activity_Main extends AppCompatActivity {
         c.moveToFirst();
 
         for(int i = 0; i < pos; i++) c.moveToNext();
-        final long DBid = c.getLong( c.getColumnIndex( "_id" ) );
-        final String DBtitle = c.getString( c.getColumnIndex( "KEY_TITLE" ) );
-        final String DBtext = c.getString( c.getColumnIndex( "KEY_TEXT" ) );
-        final String DBcolor = c.getString( c.getColumnIndex( "KEY_COLOR" ) );
+        final long noti_id = c.getLong( c.getColumnIndex( "_id" ) );
+        final String title_string = c.getString( c.getColumnIndex( "KEY_TITLE" ) );
+        final String text_string = c.getString( c.getColumnIndex( "KEY_TEXT" ) );
+        final String color_string = c.getString( c.getColumnIndex( "KEY_COLOR" ) );
 
         c.close();
 
-        CharSequence[] items = new String[] { getString(R.string.main_modify), getString(R.string.main_delete) };
-
         // 선택창
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Activity_Main.this);
-        alertDialogBuilder.setItems(items,
+        alertDialogBuilder.setItems(
+                new String[] { getString(R.string.main_modify), getString(R.string.main_delete) },
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
@@ -186,10 +185,10 @@ public class Activity_Main extends AppCompatActivity {
 
                             startActivityForResult(
                                     new Intent(Activity_Main.this, Activity_Dialog_Edit.class)
-                                            .putExtra("title", DBtitle)
-                                            .putExtra("text", DBtext)
-                                            .putExtra("color", DBcolor)
-                                            .putExtra("noti_id", DBid),
+                                            .putExtra("title", title_string)
+                                            .putExtra("text", text_string)
+                                            .putExtra("color", color_string)
+                                            .putExtra("noti_id", noti_id),
                                     2
                             );
 
@@ -198,11 +197,11 @@ public class Activity_Main extends AppCompatActivity {
                             // 알림 삭제
                             startService(
                                     new Intent(Activity_Main.this, Service_Noti.class)
-                                            .putExtra("id", -1*(int)DBid+"")
+                                            .putExtra("id", -1*(int)noti_id+"")
                             );
 
                             // 데이터베이스 삭제
-                            DB.execSQL( "DELETE FROM " + TABLE_NAME + " WHERE _id = " + DBid + ";" );
+                            DB.execSQL( "DELETE FROM " + TABLE_NAME + " WHERE _id = " + noti_id + ";" );
 
                             setList();
                             Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_deleted), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -211,8 +210,7 @@ public class Activity_Main extends AppCompatActivity {
 
                     }
                 });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        alertDialogBuilder.create().show();
 
     }
 

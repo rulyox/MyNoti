@@ -12,20 +12,16 @@ import android.widget.EditText;
 
 import com.chiralcode.colorpicker.ColorPickerDialog;
 
+import static zyon.notifier.Activity_Main.TABLE_NAME;
+
 public class Activity_Dialog_Edit extends Activity {
 
     // 데이터베이스
-    final static String TABLE_NAME = "NOTI";
     SQLiteDatabase DB;
 
     String title_string;
     String text_string;
     String color_string;
-
-    View color_add_choose;
-    View color_add_preview;
-    EditText DialogTitle;
-    EditText DialogText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +32,6 @@ public class Activity_Dialog_Edit extends Activity {
         // 데이터베이스
         DB = new DB_Helper(this).getWritableDatabase();
 
-        set();
-
-    }
-
-    void set(){
-
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String text = intent.getStringExtra("text");
@@ -49,12 +39,12 @@ public class Activity_Dialog_Edit extends Activity {
         final long noti_id = intent.getLongExtra("noti_id", -1);
 
         color_string = color;
-        color_add_choose = findViewById(R.id.color_choose_add);
-        color_add_preview = findViewById(R.id.color_preview_add);
+        final View color_add_choose = findViewById(R.id.color_choose_add);
+        final View color_add_preview = findViewById(R.id.color_preview_add);
         color_add_preview.setBackgroundColor( Color.parseColor(color_string) );
 
-        DialogTitle = findViewById( R.id.dialog_title );
-        DialogText = findViewById( R.id.dialog_text );
+        final EditText DialogTitle = findViewById( R.id.dialog_title );
+        final EditText DialogText = findViewById( R.id.dialog_text );
 
         DialogTitle.setText( title );
         DialogText.setText( text );
@@ -91,13 +81,15 @@ public class Activity_Dialog_Edit extends Activity {
                 DB.execSQL( "INSERT INTO " + TABLE_NAME + " VALUES ( " + noti_id + ", '" + title_string + "', '" + text_string + "', '" + color_string + "' );" );
 
                 // 알림 생성
-                Intent notify = new Intent(Activity_Dialog_Edit.this, Service_Noti.class);
-                notify.putExtra("id", (int)noti_id+""); notify.putExtra("title", title_string);
-                notify.putExtra("text", text_string); notify.putExtra("color", color_string);
-                startService(notify);
+                startService(
+                        new Intent(Activity_Dialog_Edit.this, Service_Noti.class)
+                                .putExtra("id", (int)noti_id+"")
+                                .putExtra("title", title_string)
+                                .putExtra("text", text_string)
+                                .putExtra("color", color_string)
+                );
 
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
+                setResult(RESULT_OK, new Intent());
                 finish();
 
             }

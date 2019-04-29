@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -22,14 +23,7 @@ public class Service_Noti extends Service {
     String CHANNEL_ID = "Channel_Noti";
 
     SharedPreferences prefs;
-    int aliveNumber;
-    int notificationNumber;
-    int noti_time_bool;
-
-    int id;
-    String title;
-    String text;
-    String color;
+    boolean show_time;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -40,19 +34,17 @@ public class Service_Noti extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         prefs = getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
-        aliveNumber = prefs.getInt("aliveNumber", 0);
-        notificationNumber = prefs.getInt("notificationNumber", 1);
-        noti_time_bool = prefs.getInt("notiTimeBoolean", 0);
+        show_time = prefs.getInt("notiTimeBoolean", 0) != 0;
 
-        id = Integer.parseInt( intent.getStringExtra("id") );
-        title = intent.getStringExtra("title");
-        text = intent.getStringExtra("text");
-        color = intent.getStringExtra("color");
+        int id = Integer.parseInt( intent.getStringExtra("id") );
+        String title = intent.getStringExtra("title");
+        String text = intent.getStringExtra("text");
+        String color = intent.getStringExtra("color");
 
         // 알림
         NotiMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if(id < 0) NotiMgr.cancel(-1*id);
-        else Notify(id,title,text, color);
+        else Notify(id, title, text, color);
 
         this.stopSelf();
 
@@ -61,47 +53,46 @@ public class Service_Noti extends Service {
     }
 
     // 알림 생성
-    void Notify(int NotiID, String NotiTitle, String NotiText, String NotiColor){
+    void Notify(int id, String title, String text, String color){
 
         try {
-            prefs = getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
-            noti_time_bool = prefs.getInt("notiTimeBoolean", 0);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                 Noti = new NotificationCompat.Builder(this, CHANNEL_ID)
-                        .setContentTitle(NotiTitle)
-                        .setContentText(NotiText)
+                        .setContentTitle(title)
+                        .setContentText(text)
                         .setSmallIcon(R.drawable.icon_noti)
                         .setAutoCancel(false)
                         .setOngoing(true)
-                        .setShowWhen((noti_time_bool != 0))
-                        .setColor(Color.parseColor(NotiColor))
-                        .setGroup("" + NotiID)
+                        .setShowWhen(show_time)
+                        .setColor(Color.parseColor(color))
+                        .setGroup("" + id)
                         .setChannelId(CHANNEL_ID)
                         .build();
                 Noti.flags = Notification.FLAG_NO_CLEAR;
                 NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, getResources().getString(R.string.main_notifications), NotificationManager.IMPORTANCE_LOW);
                 NotiMgr.createNotificationChannel(mChannel);
-                NotiMgr.notify(NotiID, Noti);
+                NotiMgr.notify(id, Noti);
 
             } else {
 
                 Noti = new Notification.Builder(getApplicationContext())
-                        .setContentTitle(NotiTitle)
-                        .setContentText(NotiText)
+                        .setContentTitle(title)
+                        .setContentText(text)
                         .setSmallIcon(R.drawable.icon_noti)
                         .setAutoCancel(false)
                         .setOngoing(true)
-                        .setShowWhen((noti_time_bool != 0))
-                        .setColor(Color.parseColor(NotiColor))
-                        .setGroup("" + NotiID)
+                        .setShowWhen(show_time)
+                        .setColor(Color.parseColor(color))
+                        .setGroup("" + id)
                         .build();
                 Noti.flags = Notification.FLAG_NO_CLEAR;
-                NotiMgr.notify(NotiID, Noti);
+                NotiMgr.notify(id, Noti);
 
             }
-        } catch (NullPointerException e){}
+
+        } catch(NullPointerException e) { Log.d("Zyon", e.toString()); }
 
     }
 

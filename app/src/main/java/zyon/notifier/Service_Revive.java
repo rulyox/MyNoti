@@ -14,9 +14,7 @@ import static zyon.notifier.Activity_Main.TABLE_NAME;
 public class Service_Revive extends Service {
 
     // 데이터베이스
-    DB_Helper mHelper;
-    SQLiteDatabase db;
-    Cursor cursor;
+    SQLiteDatabase DB;
 
     SharedPreferences prefs;
     int qa_bool;
@@ -36,11 +34,9 @@ public class Service_Revive extends Service {
         }
 
         // 데이터베이스
-        mHelper = new DB_Helper(this);
-        db = mHelper.getWritableDatabase();
-        cursor = db.rawQuery( String.format( "SELECT * FROM %s", TABLE_NAME ), null );
+        DB = new DB_Helper(this).getWritableDatabase();
 
-        Cursor c = cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor c = DB.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         c.moveToFirst();
 
         for (int i = 0; i < c.getCount(); i++) {
@@ -59,6 +55,8 @@ public class Service_Revive extends Service {
             c.moveToNext();
 
         }
+
+        c.close();
 
         this.stopSelf();
 

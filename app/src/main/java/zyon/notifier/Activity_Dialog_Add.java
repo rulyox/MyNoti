@@ -14,10 +14,11 @@ import android.widget.EditText;
 
 import com.chiralcode.colorpicker.ColorPickerDialog;
 
+import static zyon.notifier.Activity_Main.TABLE_NAME;
+
 public class Activity_Dialog_Add extends Activity {
 
     // 데이터베이스
-    final static String TABLE_NAME = "NOTI";
     SQLiteDatabase DB;
 
     // 프리퍼런스
@@ -28,11 +29,6 @@ public class Activity_Dialog_Add extends Activity {
     String title_string;
     String text_string;
     String color_string;
-
-    View color_add_choose;
-    View color_add_preview;
-    EditText DialogTitle;
-    EditText DialogText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +47,13 @@ public class Activity_Dialog_Add extends Activity {
         // 데이터베이스
         DB = new DB_Helper(this).getWritableDatabase();
 
-        set();
-
-    }
-
-    void set() {
-
         color_string = prefs.getString("notiColor", "#3F51B5");
-        color_add_choose = findViewById(R.id.color_choose_add);
-        color_add_preview = findViewById(R.id.color_preview_add);
+        final View color_add_choose = findViewById(R.id.color_choose_add);
+        final View color_add_preview = findViewById(R.id.color_preview_add);
         color_add_preview.setBackgroundColor( Color.parseColor(color_string) );
 
-        DialogTitle = findViewById( R.id.dialog_title );
-        DialogText = findViewById( R.id.dialog_text );
+        final EditText DialogTitle = findViewById( R.id.dialog_title );
+        final EditText DialogText = findViewById( R.id.dialog_text );
 
         color_add_choose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,18 +88,20 @@ public class Activity_Dialog_Add extends Activity {
                 DB.execSQL( "INSERT INTO " + TABLE_NAME + " VALUES ( " + notificationNumber + ", '" + title_string + "', '" + text_string + "', '" + color_string + "' );" );
 
                 // 알림 생성
-                Intent notify = new Intent(Activity_Dialog_Add.this, Service_Noti.class);
-                notify.putExtra("id", notificationNumber+""); notify.putExtra("title", title_string);
-                notify.putExtra("text", text_string); notify.putExtra("color", color_string);
-                startService(notify);
+                startService(
+                        new Intent(Activity_Dialog_Add.this, Service_Noti.class)
+                                .putExtra("id", notificationNumber+"")
+                                .putExtra("title", title_string)
+                                .putExtra("text", text_string)
+                                .putExtra("color", color_string)
+                );
 
                 // 알림 카운터
                 notificationNumber++;
                 editor.putInt("notificationNumber", notificationNumber);
                 editor.commit();
 
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
+                setResult(RESULT_OK, new Intent());
                 finish();
 
             }
