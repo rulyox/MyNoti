@@ -35,10 +35,9 @@ class QuickAddService : Service() {
 
     private fun createQuickAdd(checked: Boolean, color: String) {
 
-        val notification: Notification
         val notificationMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val channelId = "Quick Add"
+        val channelId = "QuickAdd"
 
         if (checked) {
 
@@ -47,48 +46,30 @@ class QuickAddService : Service() {
 
             val clickIntent = PendingIntent.getActivity(this, 0, addIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
+            val notification = NotificationCompat.Builder(this, channelId)
+                    .setContentTitle(getString(R.string.qa))
+                    .setContentText(getString(R.string.qa_text))
+                    .setSmallIcon(R.drawable.button_add)
+                    .setAutoCancel(false)
+                    .setOngoing(true)
+                    .setShowWhen(false)
+                    .setPriority(-2) // Notification.PRIORITY_MIN for API < 26
+                    .setContentIntent(clickIntent)
+                    .setColor(Color.parseColor(color))
+                    .setGroup("" + 0)
+                    .setChannelId(channelId)
+                    .build()
+
+            notification.flags = Notification.FLAG_NO_CLEAR
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                notification = NotificationCompat.Builder(this, channelId)
-                        .setContentTitle(getString(R.string.qa))
-                        .setContentText(getString(R.string.qa_text))
-                        .setSmallIcon(R.drawable.button_add)
-                        .setAutoCancel(false)
-                        .setOngoing(true)
-                        .setShowWhen(false)
-                        .setContentIntent(clickIntent)
-                        .setColor(Color.parseColor(color))
-                        .setGroup("" + 0)
-                        .setChannelId(channelId)
-                        .build()
-
-                notification.flags = Notification.FLAG_NO_CLEAR
 
                 val channel = NotificationChannel(channelId, resources.getString(R.string.qa), NotificationManager.IMPORTANCE_MIN)
                 notificationMgr.createNotificationChannel(channel)
 
-                notificationMgr.notify(0, notification)
-
-            } else {
-
-                notification = Notification.Builder(applicationContext)
-                        .setContentTitle(getString(R.string.qa))
-                        .setContentText(getString(R.string.qa_text))
-                        .setSmallIcon(R.drawable.button_add)
-                        .setAutoCancel(false)
-                        .setOngoing(true)
-                        .setShowWhen(false)
-                        .setPriority(Notification.PRIORITY_MIN)
-                        .setContentIntent(clickIntent)
-                        .setColor(Color.parseColor(color))
-                        .setGroup("" + 0)
-                        .build()
-
-                notification.flags = Notification.FLAG_NO_CLEAR
-
-                notificationMgr.notify(0, notification)
-
             }
+
+            notificationMgr.notify(0, notification)
 
         } else {
 

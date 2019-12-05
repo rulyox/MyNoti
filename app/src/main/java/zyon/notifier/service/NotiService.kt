@@ -38,7 +38,6 @@ class NotiService : Service() {
     // 알림 생성
     private fun createNoti(id: Int, title: String?, text: String?, color: String?, showTime: Boolean) {
 
-        val notification: Notification
         val notificationMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val channelId = "Notification"
@@ -50,45 +49,28 @@ class NotiService : Service() {
 
         }
 
+        val notification = NotificationCompat.Builder(this, channelId)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.icon_noti)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setShowWhen(showTime)
+                .setColor(Color.parseColor(color))
+                .setGroup("" + id)
+                .setChannelId(channelId)
+                .build()
+
+        notification.flags = Notification.FLAG_NO_CLEAR
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            notification = NotificationCompat.Builder(this, channelId)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setSmallIcon(R.drawable.icon_noti)
-                    .setAutoCancel(false)
-                    .setOngoing(true)
-                    .setShowWhen(showTime)
-                    .setColor(Color.parseColor(color))
-                    .setGroup("" + id)
-                    .setChannelId(channelId)
-                    .build()
-
-            notification.flags = Notification.FLAG_NO_CLEAR
 
             val channel = NotificationChannel(channelId, resources.getString(R.string.main_notifications), NotificationManager.IMPORTANCE_LOW)
             notificationMgr.createNotificationChannel(channel)
 
-            notificationMgr.notify(id, notification)
-
-        } else {
-
-            notification = Notification.Builder(applicationContext)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setSmallIcon(R.drawable.icon_noti)
-                    .setAutoCancel(false)
-                    .setOngoing(true)
-                    .setShowWhen(showTime)
-                    .setColor(Color.parseColor(color))
-                    .setGroup("" + id)
-                    .build()
-
-            notification.flags = Notification.FLAG_NO_CLEAR
-
-            notificationMgr.notify(id, notification)
-
         }
+
+        notificationMgr.notify(id, notification)
 
     }
 

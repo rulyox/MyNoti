@@ -8,8 +8,7 @@ import static zyon.notifier.MainActivity.TABLE_NAME;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public DBHelper(Context context)
-    {
+    public DBHelper(Context context) {
         super(context, "Database.db", null, 1);
     }
 
