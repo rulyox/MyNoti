@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">마이 노티</string>
-    <string name="app_ver">1.4.1</string>
     <string name="menu_info">정보</string>
     <string name="menu_set">설정</string>
     <string name="menu_reset">설정 초기화</string>
@@ -22,12 +21,6 @@
     <string name="dialog_color">색 선택</string>
     <string name="dialog_add">추가</string>
     <string name="dialog_cancel">취소</string>
-    <string name="info_aboutapp">앱에 대해</string>
-    <string name="info_developer">개발자</string>
-    <string name="info_zyon">Zyon</string>
-    <string name="info_contact">연락처</string>
-    <string name="info_email">zyon3075@naver.com</string>
-    <string name="info_send">개발자에게 이메일 쓰기</string>
     <string name="set_noti">알림</string>
     <string name="set_noticolor">기본 색 선택</string>
     <string name="set_showtime">알림에 시간 표시</string>

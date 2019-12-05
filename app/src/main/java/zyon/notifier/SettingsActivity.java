@@ -21,7 +21,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import com.chiralcode.colorpicker.ColorPickerDialog;
 
-public class Activity_Menu_Set extends AppCompatActivity {
+import zyon.notifier.service.QuickAddService;
+
+public class SettingsActivity extends AppCompatActivity {
 
     // 프리퍼런스
     SharedPreferences prefs;
@@ -67,7 +69,7 @@ public class Activity_Menu_Set extends AppCompatActivity {
         qa_color_preview = findViewById(R.id.qa_color_preview);
         qa_color_preview.setBackgroundColor( Color.parseColor(qa_color) );
 
-        notifyQA = new Intent(Activity_Menu_Set.this, Service_QA.class);
+        notifyQA = new Intent(SettingsActivity.this, QuickAddService.class);
 
         //알림 설정
         SetNoti();
@@ -119,7 +121,7 @@ public class Activity_Menu_Set extends AppCompatActivity {
             public void onClick(View v) {
 
                 int initialColor = Color.parseColor(noti_color_default);
-                ColorPickerDialog colorPickerDialog = new ColorPickerDialog(Activity_Menu_Set.this, initialColor, new ColorPickerDialog.OnColorSelectedListener() {
+                ColorPickerDialog colorPickerDialog = new ColorPickerDialog(SettingsActivity.this, initialColor, new ColorPickerDialog.OnColorSelectedListener() {
                     @Override
                     public void onColorSelected(int color) {
 
@@ -187,7 +189,7 @@ public class Activity_Menu_Set extends AppCompatActivity {
             public void onClick(View v) {
 
                 int initialColor = Color.parseColor(qa_color);
-                ColorPickerDialog colorPickerDialog = new ColorPickerDialog(Activity_Menu_Set.this, initialColor, new ColorPickerDialog.OnColorSelectedListener() {
+                ColorPickerDialog colorPickerDialog = new ColorPickerDialog(SettingsActivity.this, initialColor, new ColorPickerDialog.OnColorSelectedListener() {
                     @Override
                     public void onColorSelected(int color) {
 

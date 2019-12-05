@@ -1,4 +1,4 @@
-package zyon.notifier;
+package zyon.notifier.notification;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class Adapter_Main extends RecyclerView.Adapter<Adapter_Main.CustomViewHolder> {
+import zyon.notifier.MainActivity;
+import zyon.notifier.R;
 
-    private ArrayList<List_Main> mList;
+public class NotiAdapter extends RecyclerView.Adapter<NotiAdapter.CustomViewHolder> {
+
+    private ArrayList<Notification> mList;
     WeakReference<Context> mContextWeakReference;
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -37,7 +40,7 @@ public class Adapter_Main extends RecyclerView.Adapter<Adapter_Main.CustomViewHo
             parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((Activity_Main) context).Edit( getAdapterPosition() );
+                    ((MainActivity) context).Edit( getAdapterPosition() );
                 }
             });
 
@@ -45,7 +48,7 @@ public class Adapter_Main extends RecyclerView.Adapter<Adapter_Main.CustomViewHo
 
     }
 
-    public Adapter_Main(ArrayList<List_Main> list, Context context) {
+    public NotiAdapter(ArrayList<Notification> list, Context context) {
 
         this.mList = list;
         this.mContextWeakReference = new WeakReference<Context>(context);

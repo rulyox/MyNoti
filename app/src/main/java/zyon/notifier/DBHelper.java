@@ -4,11 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static zyon.notifier.Activity_Main.TABLE_NAME;
+import static zyon.notifier.MainActivity.TABLE_NAME;
 
-class DB_Helper extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
-    DB_Helper(Context context)
+    public DBHelper(Context context)
     {
         super(context, "Database.db", null, 1);
     }

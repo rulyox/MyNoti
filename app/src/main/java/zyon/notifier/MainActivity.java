@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,16 +23,23 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class Activity_Main extends AppCompatActivity {
+import zyon.notifier.dialog.AddDialogActivity;
+import zyon.notifier.dialog.EditDialogActivity;
+import zyon.notifier.notification.NotiAdapter;
+import zyon.notifier.notification.Notification;
+import zyon.notifier.service.NotiService;
+import zyon.notifier.service.ReviveService;
+
+public class MainActivity extends AppCompatActivity {
 
     // 데이터베이스
-    final static String TABLE_NAME = "NOTI";
+    public final static String TABLE_NAME = "NOTI";
     SQLiteDatabase DB;
 
     // 리싸이클러뷰
     RecyclerView mRecyclerView;
-    ArrayList<List_Main> mArrayList;
-    Adapter_Main mAdapter;
+    ArrayList<Notification> mArrayList;
+    NotiAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,24 +52,19 @@ public class Activity_Main extends AppCompatActivity {
 
         // 추가 버튼
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(
-                        new Intent(Activity_Main.this, Activity_Dialog_Add.class),
-                        1
-                );
-            }
+        fab.setOnClickListener(view -> {
+            Intent addDialogIntent = new Intent(MainActivity.this, AddDialogActivity.class);
+            startActivityForResult(addDialogIntent, 1);
         });
 
         // 데이터베이스
-        DB = new DB_Helper(this).getWritableDatabase();
+        DB = new DBHelper(this).getWritableDatabase();
 
         setRecycler();
         setList();
 
         // 알림 복구
-        startService( new Intent(this, Service_Revive.class) );
+        startService( new Intent(this, ReviveService.class) );
 
     }
 
@@ -78,11 +79,8 @@ public class Activity_Main extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menu_info) {
-            startActivity( new Intent(this, Activity_Menu_Info.class) );
-            return true;
-        }else if (id == R.id.menu_set) {
-            startActivity( new Intent(this, Activity_Menu_Set.class) );
+        if (id == R.id.menu_set) {
+            startActivity( new Intent(this, SettingsActivity.class) );
             return true;
         }
 
@@ -112,12 +110,12 @@ public class Activity_Main extends AppCompatActivity {
 
             setList();
 
-            if(requestCode == 1) Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_added), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            else if(requestCode == 2) Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_modified), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+//            if(requestCode == 1) Snackbar.make(findViewById(R.id.content_parent), getString(R.string.alert_added), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+//            else if(requestCode == 2) Snackbar.make(findViewById(R.id.content_parent), getString(R.string.alert_modified), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
         } else {
 
-            Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_canceled), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+//            Snackbar.make(findViewById(R.id.content_parent), getString(R.string.alert_canceled), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
         }
 
@@ -141,7 +139,7 @@ public class Activity_Main extends AppCompatActivity {
         for(int i = 0; i < c.getCount(); i++) {
 
             mArrayList.add(
-                    new List_Main(
+                    new Notification(
                             c.getString( c.getColumnIndex( "KEY_COLOR" ) ),
                             c.getString( c.getColumnIndex( "KEY_TITLE" ) ),
                             c.getString( c.getColumnIndex( "KEY_TEXT" ) )
@@ -154,14 +152,14 @@ public class Activity_Main extends AppCompatActivity {
 
         c.close();
 
-        mAdapter = new Adapter_Main(mArrayList, this);
+        mAdapter = new NotiAdapter(mArrayList, this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
     }
 
     // 알림 수정, 삭제
-    void Edit(final int pos) {
+    public void Edit(final int pos) {
 
         Cursor c = DB.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         c.moveToFirst();
@@ -175,7 +173,7 @@ public class Activity_Main extends AppCompatActivity {
         c.close();
 
         // 선택창
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Activity_Main.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilder.setItems(
                 new String[] { getString(R.string.main_modify), getString(R.string.main_delete) },
                 new DialogInterface.OnClickListener() {
@@ -184,7 +182,7 @@ public class Activity_Main extends AppCompatActivity {
                         if(id == 0) { // 수정
 
                             startActivityForResult(
-                                    new Intent(Activity_Main.this, Activity_Dialog_Edit.class)
+                                    new Intent(MainActivity.this, EditDialogActivity.class)
                                             .putExtra("title", title_string)
                                             .putExtra("text", text_string)
                                             .putExtra("color", color_string)
@@ -196,7 +194,7 @@ public class Activity_Main extends AppCompatActivity {
 
                             // 알림 삭제
                             startService(
-                                    new Intent(Activity_Main.this, Service_Noti.class)
+                                    new Intent(MainActivity.this, NotiService.class)
                                             .putExtra("id", -1*(int)noti_id+"")
                             );
 

@@ -1,6 +1,6 @@
-package zyon.notifier;
+package zyon.notifier.notification;
 
-public class List_Main {
+public class Notification {
 
     private String Color;
     private String Title;
@@ -30,7 +30,7 @@ public class List_Main {
         Text = text;
     }
 
-    public List_Main(String color, String title, String text) {
+    public Notification(String color, String title, String text) {
         Color = color;
         Title = title;
         Text = text;
