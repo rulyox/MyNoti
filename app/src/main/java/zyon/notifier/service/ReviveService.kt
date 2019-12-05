@@ -24,24 +24,28 @@ class ReviveService : Service() {
             startService(notifyQA)
         }
 
-        // 데이터베이스
+        // database
         val db = DBHelper(this).writableDatabase
         val cursor = db.rawQuery("SELECT * FROM " + MainActivity.TABLE_NAME, null)
         cursor.moveToFirst()
 
         for(i in 0 until cursor.count) {
+
             val id = cursor.getLong(cursor.getColumnIndex("_id"))
             val title = cursor.getString(cursor.getColumnIndex("KEY_TITLE"))
             val text = cursor.getString(cursor.getColumnIndex("KEY_TEXT"))
             val color = cursor.getString(cursor.getColumnIndex("KEY_COLOR"))
-            //알림 생성
-            val notify = Intent(this@ReviveService, NotiService::class.java)
-            notify.putExtra("id", id.toString() + "")
-            notify.putExtra("title", title)
-            notify.putExtra("text", text)
-            notify.putExtra("color", color)
-            startService(notify)
+
+            // create notification
+            val notifyIntent = Intent(this@ReviveService, NotiService::class.java)
+            notifyIntent.putExtra("id", id.toString() + "")
+            notifyIntent.putExtra("title", title)
+            notifyIntent.putExtra("text", text)
+            notifyIntent.putExtra("color", color)
+            startService(notifyIntent)
+
             cursor.moveToNext()
+
         }
 
         cursor.close()

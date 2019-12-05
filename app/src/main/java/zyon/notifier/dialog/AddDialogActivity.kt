@@ -27,12 +27,12 @@ class AddDialogActivity : Activity() {
         val intent = intent
         if (intent.getIntExtra("qa", -1) == 1) sendBroadcast(Intent("FINISH_ACTIVITY"))
 
-        // 프리퍼런스
+        // preference
         val prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
         var notificationNumber = prefs.getInt("notificationNumber", 1)
         var colorString = prefs.getString("notiColor", "#3F51B5")
 
-        // 데이터베이스
+        // database
         val db = DBHelper(this).writableDatabase
 
         // color preview
@@ -44,8 +44,10 @@ class AddDialogActivity : Activity() {
             val initialColor = Color.parseColor(colorString)
 
             val colorPickerDialog = ColorPickerDialog(this@AddDialogActivity, initialColor, OnColorSelectedListener { color ->
+
                 colorString = String.format("#%06X", 0xFFFFFF and color)
                 color_preview_add.setBackgroundColor(Color.parseColor(colorString))
+
             })
 
             colorPickerDialog.show()
@@ -58,30 +60,34 @@ class AddDialogActivity : Activity() {
             val title = dialog_title.text.toString()
             val text = dialog_text.text.toString()
 
-            //추가되는 데이터 아이디(알림 카운터) : notificationNumber
-            // 데이터베이스에 추가
+            // add to database
             db.execSQL("INSERT INTO " + MainActivity.TABLE_NAME + " VALUES ( " + notificationNumber + ", '" + title + "', '" + text + "', '" + colorString + "' );")
 
-            // 알림 생성
-            val notiIntent = Intent(this@AddDialogActivity, NotiService::class.java)
-            notiIntent.putExtra("id", notificationNumber.toString() + "")
-            notiIntent.putExtra("title", title)
-            notiIntent.putExtra("text", text)
-            notiIntent.putExtra("color", colorString)
-            startService(notiIntent)
+            // create notification
+            val notifyIntent = Intent(this@AddDialogActivity, NotiService::class.java)
+            notifyIntent.putExtra("id", notificationNumber.toString() + "")
+            notifyIntent.putExtra("title", title)
+            notifyIntent.putExtra("text", text)
+            notifyIntent.putExtra("color", colorString)
+            startService(notifyIntent)
 
-            // 알림 카운터
+            // notification counter
             notificationNumber++
             val editor = prefs.edit()
             editor.putInt("notificationNumber", notificationNumber)
             editor.apply()
+
             setResult(RESULT_OK, Intent())
             finish()
 
         }
 
         // cancel button
-        button_cancel.setOnClickListener { finish() }
+        button_cancel.setOnClickListener {
+
+            finish()
+
+        }
 
     }
 

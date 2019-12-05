@@ -32,7 +32,7 @@ class NotiAdapter(private val mList: ArrayList<Notification>?, context: Context)
             // click anywhere
             parent.setOnClickListener {
 
-                (context as MainActivity?)!!.Edit(adapterPosition)
+                (context as MainActivity?)!!.notiClicked(adapterPosition)
 
             }
 

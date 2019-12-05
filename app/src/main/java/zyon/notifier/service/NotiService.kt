@@ -35,7 +35,7 @@ class NotiService : Service() {
 
     }
 
-    // 알림 생성
+    // create notification
     private fun createNoti(id: Int, title: String?, text: String?, color: String?, showTime: Boolean) {
 
         val notificationMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

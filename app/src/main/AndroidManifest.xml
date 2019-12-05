@@ -27,7 +27,7 @@
 
                 <data
                     android:scheme="https"
-                    android:host="play.google.com" />
+                    android:host="rulyox.com" />
             </intent-filter>
         </activity>
         <activity
