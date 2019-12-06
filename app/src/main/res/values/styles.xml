@@ -4,11 +4,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textViewStyle">@style/TextViewFont</item>
+        <item name="android:editTextStyle">@style/EditTextFont</item>
+        <item name="android:buttonStyle">@style/ButtonFont</item>
     </style>
 
-    <style name="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -18,12 +22,21 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textViewStyle">@style/TextViewFont</item>
+        <item name="android:editTextStyle">@style/EditTextFont</item>
+        <item name="android:buttonStyle">@style/ButtonFont</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <style name="TextViewFont" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/bm_dohyeon</item>
+    </style>
+
+    <style name="EditTextFont" parent="Widget.AppCompat.EditText">
+        <item name="android:fontFamily">@font/bm_dohyeon</item>
+    </style>
+
+    <style name="ButtonFont" parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">@font/bm_dohyeon</item>
     </style>
 
 </resources>
