@@ -6,13 +6,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_set.*
-
-import com.google.android.material.snackbar.Snackbar
 
 import zyon.notifier.service.QuickAddService
 
@@ -151,11 +150,8 @@ class SettingsActivity : AppCompatActivity() {
         switch_quickadd.isChecked = qaShow != 0
         switch_quickadd.setOnCheckedChangeListener { buttonView, isChecked ->
 
-            if (isChecked) {
-                Snackbar.make(findViewById(R.id.activity_set), getString(R.string.alert_qa_en), Snackbar.LENGTH_SHORT).setAction("Action", null).show()
-            } else {
-                Snackbar.make(findViewById(R.id.activity_set), getString(R.string.alert_qa_dis), Snackbar.LENGTH_SHORT).setAction("Action", null).show()
-            }
+            if (isChecked) Toast.makeText(this, getString(R.string.alert_qa_en), Toast.LENGTH_LONG).show()
+            else Toast.makeText(this, getString(R.string.alert_qa_dis), Toast.LENGTH_LONG).show()
 
             if (isChecked) {
                 qaShow = 1

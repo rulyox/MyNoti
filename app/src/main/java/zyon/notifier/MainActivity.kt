@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,8 +20,6 @@ import java.util.*
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-
-import com.google.android.material.snackbar.Snackbar
 
 import zyon.notifier.dialog.AddDialogActivity
 import zyon.notifier.dialog.EditDialogActivity
@@ -87,11 +86,16 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
+
             setList()
-//            if(requestCode == 1) Snackbar.make(findViewById(R.id.content_parent), getString(R.string.alert_added), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-//            else if(requestCode == 2) Snackbar.make(findViewById(R.id.content_parent), getString(R.string.alert_modified), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+
+            if(requestCode == 1) Toast.makeText(this, getString(R.string.alert_added), Toast.LENGTH_LONG).show()
+            else if(requestCode == 2) Toast.makeText(this, getString(R.string.alert_canceled), Toast.LENGTH_LONG).show()
+
         } else {
-//            Snackbar.make(findViewById(R.id.content_parent), getString(R.string.alert_canceled), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+
+            Toast.makeText(this, getString(R.string.alert_canceled), Toast.LENGTH_LONG).show()
+
         }
 
     }
@@ -174,7 +178,8 @@ class MainActivity : AppCompatActivity() {
                 // delete database
                 db!!.execSQL("DELETE FROM $TABLE_NAME WHERE _id = $notiId;")
                 setList()
-                Snackbar.make(findViewById(R.id.layout_main), getString(R.string.alert_deleted), Snackbar.LENGTH_SHORT).setAction("Action", null).show()
+
+                Toast.makeText(this, getString(R.string.alert_deleted), Toast.LENGTH_LONG).show()
 
             }
 

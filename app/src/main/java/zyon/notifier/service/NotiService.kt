@@ -51,6 +51,7 @@ class NotiService : Service() {
                 .setSmallIcon(R.drawable.icon_noti)
                 .setAutoCancel(false)
                 .setOngoing(true)
+                .setShowWhen(false)
                 .setColor(Color.parseColor(color))
                 .setGroup("" + id)
                 .setChannelId(channelId)

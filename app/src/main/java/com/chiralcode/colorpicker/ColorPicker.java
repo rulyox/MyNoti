@@ -294,30 +294,30 @@ public class ColorPicker extends View {
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         switch (action) {
-        case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
 
-            int x = (int) event.getX();
-            int y = (int) event.getY();
-            int cx = x - getWidth() / 2;
-            int cy = y - getHeight() / 2;
-            double d = Math.sqrt(cx * cx + cy * cy);
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                int cx = x - getWidth() / 2;
+                int cy = y - getHeight() / 2;
+                double d = Math.sqrt(cx * cx + cy * cy);
 
-            if (d <= colorWheelRadius) {
+                if (d <= colorWheelRadius) {
 
-                colorHSV[0] = (float) (Math.toDegrees(Math.atan2(cy, cx)) + 180f);
-                colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
+                    colorHSV[0] = (float) (Math.toDegrees(Math.atan2(cy, cx)) + 180f);
+                    colorHSV[1] = Math.max(0f, Math.min(1f, (float) (d / colorWheelRadius)));
 
-                invalidate();
+                    invalidate();
 
-            } else if (x >= getWidth() / 2 && d >= innerWheelRadius) {
+                } else if (x >= getWidth() / 2 && d >= innerWheelRadius) {
 
-                colorHSV[2] = (float) Math.max(0, Math.min(1, Math.atan2(cy, cx) / Math.PI + 0.5f));
+                    colorHSV[2] = (float) Math.max(0, Math.min(1, Math.atan2(cy, cx) / Math.PI + 0.5f));
 
-                invalidate();
-            }
+                    invalidate();
+                }
 
-            return true;
+                return true;
         }
         return super.onTouchEvent(event);
     }
