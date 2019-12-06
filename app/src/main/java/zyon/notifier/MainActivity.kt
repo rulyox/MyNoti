@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         cursor.close()
 
         // choose
-        val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
+        val alertDialogBuilder = AlertDialog.Builder(this@MainActivity, R.style.DialogTheme)
         alertDialogBuilder.setItems(arrayOf(getString(R.string.main_modify), getString(R.string.main_delete))) { dialog, id ->
 
             if (id == 0) { // edit

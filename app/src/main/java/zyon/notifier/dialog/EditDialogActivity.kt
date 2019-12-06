@@ -1,10 +1,13 @@
 package zyon.notifier.dialog
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
+
+import androidx.appcompat.app.AlertDialog
 
 import kotlinx.android.synthetic.main.dialog_edit.*
 
@@ -13,8 +16,7 @@ import zyon.notifier.MainActivity
 import zyon.notifier.R
 import zyon.notifier.service.NotiService
 
-import com.chiralcode.colorpicker.ColorPickerDialog
-import com.chiralcode.colorpicker.ColorPickerDialog.OnColorSelectedListener
+import com.chiralcode.colorpicker.ColorPicker
 
 class EditDialogActivity : Activity() {
 
@@ -39,11 +41,35 @@ class EditDialogActivity : Activity() {
 
         color_choose_add.setOnClickListener {
 
+            // open color picker dialog
             val initialColor = Color.parseColor(colorString)
-            val colorPickerDialog = ColorPickerDialog(this@EditDialogActivity, initialColor, OnColorSelectedListener { color ->
-                colorString = String.format("#%06X", 0xFFFFFF and color)
-                color_preview_add.setBackgroundColor(Color.parseColor(colorString))
-            })
+
+            val alertDialogBuilder = AlertDialog.Builder(this@EditDialogActivity, R.style.DialogTheme)
+
+            val colorPickerView = ColorPicker(this)
+            colorPickerView.color = initialColor
+            alertDialogBuilder.setView(colorPickerView)
+
+            val onClickListener = DialogInterface.OnClickListener { dialog, which ->
+                when (which) {
+
+                    DialogInterface.BUTTON_POSITIVE -> {
+
+                        val selectedColor: Int = colorPickerView.color
+
+                        colorString = String.format("#%06X", 0xFFFFFF and selectedColor)
+                        color_preview_add.setBackgroundColor(Color.parseColor(colorString))
+
+                    }
+
+                    DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
+
+                }
+            }
+            alertDialogBuilder.setPositiveButton(this.getString(android.R.string.ok), onClickListener)
+            alertDialogBuilder.setNegativeButton(this.getString(android.R.string.cancel), onClickListener)
+
+            val colorPickerDialog = alertDialogBuilder.create()
             colorPickerDialog.show()
 
         }

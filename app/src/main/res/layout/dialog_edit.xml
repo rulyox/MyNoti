@@ -23,7 +23,8 @@
         android:id="@+id/dialog_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/dialog_titlehint" >
+        android:hint="@string/dialog_titlehint"
+        android:singleLine="true" >
         <requestFocus />
     </EditText>
 
@@ -31,7 +32,8 @@
         android:id="@+id/dialog_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/dialog_texthint" />
+        android:hint="@string/dialog_texthint"
+        android:singleLine="true" />
 
     <Space
         android:layout_width="wrap_content"

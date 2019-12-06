@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.activity_set.*
@@ -15,15 +16,13 @@ import com.google.android.material.snackbar.Snackbar
 
 import zyon.notifier.service.QuickAddService
 
-import com.chiralcode.colorpicker.ColorPickerDialog
-import com.chiralcode.colorpicker.ColorPickerDialog.OnColorSelectedListener
+import com.chiralcode.colorpicker.ColorPicker
 
 class SettingsActivity : AppCompatActivity() {
 
     private var prefs: SharedPreferences? = null
 
     private var notiColor = ""
-    private var notiTimeShow = 0
     private var qaShow = 0
     private var qaColor = ""
 
@@ -90,7 +89,6 @@ class SettingsActivity : AppCompatActivity() {
         prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
 
         notiColor = prefs!!.getString("notiColor", "#3F51B5")!!
-        notiTimeShow = prefs!!.getInt("notiTimeBoolean", 0)
         qaShow = prefs!!.getInt("quickaddBoolean", 0)
         qaColor = prefs!!.getString("quickaddColor", "#FF4081")!!
 
@@ -104,29 +102,39 @@ class SettingsActivity : AppCompatActivity() {
         // choose color
         color_choose.setOnClickListener {
 
+            // open color picker dialog
             val initialColor = Color.parseColor(notiColor)
-            val colorPickerDialog = ColorPickerDialog(this@SettingsActivity, initialColor, OnColorSelectedListener { color ->
-                notiColor = String.format("#%06X", 0xFFFFFF and color)
 
-                val editor = prefs!!.edit()
-                editor.putString("notiColor", notiColor)
-                editor.apply()
+            val alertDialogBuilder = AlertDialog.Builder(this@SettingsActivity, R.style.DialogTheme)
 
-                color_preview!!.setBackgroundColor(Color.parseColor(notiColor))
-            })
+            val colorPickerView = ColorPicker(this)
+            colorPickerView.color = initialColor
+            alertDialogBuilder.setView(colorPickerView)
+
+            val onClickListener = DialogInterface.OnClickListener { dialog, which ->
+                when (which) {
+
+                    DialogInterface.BUTTON_POSITIVE -> {
+
+                        val selectedColor: Int = colorPickerView.color
+
+                        notiColor = String.format("#%06X", 0xFFFFFF and selectedColor)
+                        val editor = prefs!!.edit()
+                        editor.putString("notiColor", notiColor)
+                        editor.apply()
+                        color_preview!!.setBackgroundColor(Color.parseColor(notiColor))
+
+                    }
+
+                    DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
+
+                }
+            }
+            alertDialogBuilder.setPositiveButton(this.getString(android.R.string.ok), onClickListener)
+            alertDialogBuilder.setNegativeButton(this.getString(android.R.string.cancel), onClickListener)
+
+            val colorPickerDialog = alertDialogBuilder.create()
             colorPickerDialog.show()
-
-        }
-
-        // show time
-        checkbox_showtime.isChecked = notiTimeShow != 0
-        checkbox_showtime.setOnCheckedChangeListener { buttonView, isChecked ->
-
-            notiTimeShow = if (isChecked) 1 else 0
-
-            val editor = prefs!!.edit()
-            editor.putInt("notiTimeBoolean", notiTimeShow)
-            editor.apply()
 
         }
 
@@ -172,17 +180,43 @@ class SettingsActivity : AppCompatActivity() {
 
         // choose color
         qa_color_choose.setOnClickListener {
+
+            // open color picker dialog
             val initialColor = Color.parseColor(qaColor)
-            val colorPickerDialog = ColorPickerDialog(this@SettingsActivity, initialColor, OnColorSelectedListener { color ->
-                qaColor = String.format("#%06X", 0xFFFFFF and color)
-                val editor = prefs!!.edit()
-                editor.putString("quickaddColor", qaColor)
-                editor.apply()
-                qaIntent.putExtra("check", qaShow.toString() + "")
-                startService(qaIntent)
-                qa_color_preview!!.setBackgroundColor(Color.parseColor(qaColor))
-            })
+
+            val alertDialogBuilder = AlertDialog.Builder(this@SettingsActivity, R.style.DialogTheme)
+
+            val colorPickerView = ColorPicker(this)
+            colorPickerView.color = initialColor
+            alertDialogBuilder.setView(colorPickerView)
+
+            val onClickListener = DialogInterface.OnClickListener { dialog, which ->
+                when (which) {
+
+                    DialogInterface.BUTTON_POSITIVE -> {
+
+                        val selectedColor: Int = colorPickerView.color
+
+                        qaColor = String.format("#%06X", 0xFFFFFF and selectedColor)
+                        val editor = prefs!!.edit()
+                        editor.putString("quickaddColor", qaColor)
+                        editor.apply()
+                        qaIntent.putExtra("check", qaShow.toString() + "")
+                        startService(qaIntent)
+                        qa_color_preview!!.setBackgroundColor(Color.parseColor(qaColor))
+
+                    }
+
+                    DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
+
+                }
+            }
+            alertDialogBuilder.setPositiveButton(this.getString(android.R.string.ok), onClickListener)
+            alertDialogBuilder.setNegativeButton(this.getString(android.R.string.cancel), onClickListener)
+
+            val colorPickerDialog = alertDialogBuilder.create()
             colorPickerDialog.show()
+
         }
 
     }
@@ -191,19 +225,16 @@ class SettingsActivity : AppCompatActivity() {
     private fun reset() {
 
         notiColor = "#3F51B5"
-        notiTimeShow = 0
         qaShow = 0
         qaColor = "#FF4081"
 
         val editor = prefs!!.edit()
         editor.putString("notiColor", notiColor)
-        editor.putInt("notiTimeBoolean", notiTimeShow)
         editor.putInt("quickaddBoolean", qaShow)
         editor.putString("quickaddColor", qaColor)
         editor.apply()
 
         color_preview!!.setBackgroundColor(Color.parseColor(notiColor))
-        checkbox_showtime.isChecked = notiTimeShow != 0
         switch_quickadd.isChecked = qaShow != 0
         qa_color_preview!!.setBackgroundColor(Color.parseColor(qaColor))
 

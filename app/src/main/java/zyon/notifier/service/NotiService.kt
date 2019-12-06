@@ -23,11 +23,7 @@ class NotiService : Service() {
         val text = intent.getStringExtra("text")
         val color = intent.getStringExtra("color")
 
-        // get data from preferences
-        val prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
-        val showTime = prefs.getInt("notiTimeBoolean", 0) != 0
-
-        createNoti(id, title, text, color, showTime)
+        createNoti(id, title, text, color)
 
         this.stopSelf()
 
@@ -36,7 +32,7 @@ class NotiService : Service() {
     }
 
     // create notification
-    private fun createNoti(id: Int, title: String?, text: String?, color: String?, showTime: Boolean) {
+    private fun createNoti(id: Int, title: String?, text: String?, color: String?) {
 
         val notificationMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -55,7 +51,6 @@ class NotiService : Service() {
                 .setSmallIcon(R.drawable.icon_noti)
                 .setAutoCancel(false)
                 .setOngoing(true)
-                .setShowWhen(showTime)
                 .setColor(Color.parseColor(color))
                 .setGroup("" + id)
                 .setChannelId(channelId)
