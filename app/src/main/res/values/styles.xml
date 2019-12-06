@@ -29,15 +29,15 @@
     </style>
 
     <style name="TextViewFont" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/bm_dohyeon</item>
+        <item name="android:fontFamily">@font/nanum_square_round</item>
     </style>
 
     <style name="EditTextFont" parent="Widget.AppCompat.EditText">
-        <item name="android:fontFamily">@font/bm_dohyeon</item>
+        <item name="android:fontFamily">@font/nanum_square_round</item>
     </style>
 
     <style name="ButtonFont" parent="Widget.AppCompat.Button">
-        <item name="android:fontFamily">@font/bm_dohyeon</item>
+        <item name="android:fontFamily">@font/nanum_square_round</item>
     </style>
 
 </resources>

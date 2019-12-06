@@ -75,7 +75,7 @@
                 android:textSize="16sp"
                 android:textColor="#DD000000"
                 android:text="@string/set_enableqa"
-                android:fontFamily="@font/bm_dohyeon"/>
+                android:fontFamily="@font/nanum_square_round"/>
         </LinearLayout>
 
         <View

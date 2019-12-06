@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 
 import androidx.appcompat.app.AlertDialog
@@ -89,12 +90,12 @@ class MainActivity : AppCompatActivity() {
 
             setList()
 
-            if(requestCode == 1) Toast.makeText(this, getString(R.string.alert_added), Toast.LENGTH_LONG).show()
-            else if(requestCode == 2) Toast.makeText(this, getString(R.string.alert_canceled), Toast.LENGTH_LONG).show()
+            if(requestCode == 1) Toast.makeText(this, getString(R.string.alert_added), Toast.LENGTH_SHORT).show()
+            else if(requestCode == 2) Toast.makeText(this, getString(R.string.alert_modified), Toast.LENGTH_SHORT).show()
 
         } else {
 
-            Toast.makeText(this, getString(R.string.alert_canceled), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.alert_canceled), Toast.LENGTH_SHORT).show()
 
         }
 
@@ -118,6 +119,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setList() {
 
+        showNoText()
+
         val mArrayList: ArrayList<Notification> = ArrayList()
 
         val cursor = db!!.rawQuery("SELECT * FROM $TABLE_NAME", null)
@@ -140,6 +143,27 @@ class MainActivity : AppCompatActivity() {
         val mAdapter = NotiAdapter(mArrayList, this)
         list_main_recycler.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
+
+    }
+
+    private fun showNoText() {
+
+        val cursor = db!!.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        cursor.moveToFirst()
+
+        if(cursor.count == 0) {
+
+            main_text_no_notifications.visibility = View.VISIBLE
+            main_notifications_parent.visibility = View.GONE
+
+        } else {
+
+            main_text_no_notifications.visibility = View.GONE
+            main_notifications_parent.visibility = View.VISIBLE
+
+        }
+
+        cursor.close()
 
     }
 
@@ -179,7 +203,7 @@ class MainActivity : AppCompatActivity() {
                 db!!.execSQL("DELETE FROM $TABLE_NAME WHERE _id = $notiId;")
                 setList()
 
-                Toast.makeText(this, getString(R.string.alert_deleted), Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.alert_deleted), Toast.LENGTH_SHORT).show()
 
             }
 

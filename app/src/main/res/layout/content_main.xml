@@ -12,20 +12,39 @@
         android:padding="16dp" >
 
         <TextView
-            android:id="@+id/text_notifications"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="@color/colorAccent"
-            android:text="@string/main_notifications" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_main_recycler"
-            android:layout_below="@id/text_notifications"
+            android:id="@+id/main_text_no_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:overScrollMode="never" />
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="알림이 없습니다."
+            android:textSize="20sp"
+            android:textColor="#66000000" />
+
+        <LinearLayout
+            android:id="@+id/main_notifications_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/main_text_no_notifications"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text_notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/colorAccent"
+                android:text="@string/main_notifications" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_main_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
