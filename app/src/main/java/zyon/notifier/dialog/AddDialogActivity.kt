@@ -26,12 +26,12 @@ class AddDialogActivity : Activity() {
         setContentView(R.layout.dialog_add)
 
         val intent = intent
-        if (intent.getIntExtra("qa", -1) == 1) sendBroadcast(Intent("FINISH_ACTIVITY"))
+        if(intent.getBooleanExtra("qa", false)) sendBroadcast(Intent("FINISH_ACTIVITY"))
 
         // preference
         val prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
-        var notificationNumber = prefs.getInt("notificationNumber", 1)
-        var colorString = prefs.getString("notiColor", "#3F51B5")
+        var notificationNumber = prefs.getInt("NOTIFICATION_COUNT", 1)
+        var colorString = prefs.getString("NOTIFICATION_COLOR", "#3F51B5")
 
         // database
         val db = DBManager(this)
@@ -95,7 +95,7 @@ class AddDialogActivity : Activity() {
             // notification counter
             notificationNumber++
             val editor = prefs.edit()
-            editor.putInt("notificationNumber", notificationNumber)
+            editor.putInt("NOTIFICATION_COUNT", notificationNumber)
             editor.apply()
 
             setResult(RESULT_OK, Intent())

@@ -186,10 +186,10 @@ class MainActivity : AppCompatActivity() {
             if (id == 0) { // edit
 
                 val editIntent = Intent(this@MainActivity, EditDialogActivity::class.java)
+                editIntent.putExtra("id", notiId)
                 editIntent.putExtra("title", title)
                 editIntent.putExtra("text", text)
                 editIntent.putExtra("color", color)
-                editIntent.putExtra("noti_id", notiId)
                 startActivityForResult(editIntent, 2)
 
             } else if (id == 1) { // delete

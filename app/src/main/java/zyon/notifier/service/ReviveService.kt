@@ -15,12 +15,14 @@ class ReviveService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
         val prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
-        val qaBool = prefs.getInt("quickaddBoolean", 0)
+        val qaBool = prefs.getBoolean("QUICK_ADD_USE", false)
 
-        if(qaBool != 0) {
+        if(qaBool) {
+
             val notifyQA = Intent(this@ReviveService, QuickAddService::class.java)
-            notifyQA.putExtra("check", "1")
+            notifyQA.putExtra("use", true)
             startService(notifyQA)
+
         }
 
         // database

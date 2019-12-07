@@ -22,7 +22,7 @@ class SettingsActivity : AppCompatActivity() {
     private var prefs: SharedPreferences? = null
 
     private var notiColor = ""
-    private var qaShow = 0
+    private var qaShow = false
     private var qaColor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,9 +87,9 @@ class SettingsActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
 
-        notiColor = prefs!!.getString("notiColor", "#3F51B5")!!
-        qaShow = prefs!!.getInt("quickaddBoolean", 0)
-        qaColor = prefs!!.getString("quickaddColor", "#FF4081")!!
+        notiColor = prefs!!.getString("NOTIFICATION_COLOR", "#3F51B5")!!
+        qaShow = prefs!!.getBoolean("QUICK_ADD_USE", false)
+        qaColor = prefs!!.getString("QUICK_ADD_COLOR", "#3F51B5")!!
 
     }
 
@@ -119,7 +119,7 @@ class SettingsActivity : AppCompatActivity() {
 
                         notiColor = String.format("#%06X", 0xFFFFFF and selectedColor)
                         val editor = prefs!!.edit()
-                        editor.putString("notiColor", notiColor)
+                        editor.putString("NOTIFICATION_COLOR", notiColor)
                         editor.apply()
                         color_preview!!.setBackgroundColor(Color.parseColor(notiColor))
 
@@ -147,29 +147,29 @@ class SettingsActivity : AppCompatActivity() {
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)
 
         // activate
-        switch_quickadd.isChecked = qaShow != 0
+        switch_quickadd.isChecked = qaShow
         switch_quickadd.setOnCheckedChangeListener { buttonView, isChecked ->
 
             if (isChecked) Toast.makeText(this, getString(R.string.alert_qa_en), Toast.LENGTH_SHORT).show()
             else Toast.makeText(this, getString(R.string.alert_qa_dis), Toast.LENGTH_SHORT).show()
 
             if (isChecked) {
-                qaShow = 1
+                qaShow = true
 
                 val editor = prefs!!.edit()
-                editor.putInt("quickaddBoolean", qaShow)
+                editor.putBoolean("QUICK_ADD_USE", qaShow)
                 editor.apply()
 
             } else {
-                qaShow = 0
+                qaShow = false
 
                 val editor = prefs!!.edit()
-                editor.putInt("quickaddBoolean", qaShow)
+                editor.putBoolean("QUICK_ADD_USE", qaShow)
                 editor.apply()
             }
 
-            if (isChecked) qaIntent.putExtra("check", "1")
-            else qaIntent.putExtra("check", "0")
+            if (isChecked) qaIntent.putExtra("use", true)
+            else qaIntent.putExtra("use", false)
             startService(qaIntent)
 
         }
@@ -195,7 +195,7 @@ class SettingsActivity : AppCompatActivity() {
 
                         qaColor = String.format("#%06X", 0xFFFFFF and selectedColor)
                         val editor = prefs!!.edit()
-                        editor.putString("quickaddColor", qaColor)
+                        editor.putString("QUICK_ADD_COLOR", qaColor)
                         editor.apply()
                         qaIntent.putExtra("check", qaShow.toString() + "")
                         startService(qaIntent)
@@ -221,21 +221,21 @@ class SettingsActivity : AppCompatActivity() {
     private fun reset() {
 
         notiColor = "#3F51B5"
-        qaShow = 0
-        qaColor = "#FF4081"
+        qaShow = false
+        qaColor = "#3F51B5"
 
         val editor = prefs!!.edit()
-        editor.putString("notiColor", notiColor)
-        editor.putInt("quickaddBoolean", qaShow)
-        editor.putString("quickaddColor", qaColor)
+        editor.putString("NOTIFICATION_COLOR", notiColor)
+        editor.putBoolean("QUICK_ADD_USE", qaShow)
+        editor.putString("QUICK_ADD_COLOR", qaColor)
         editor.apply()
 
         color_preview!!.setBackgroundColor(Color.parseColor(notiColor))
-        switch_quickadd.isChecked = qaShow != 0
+        switch_quickadd.isChecked = qaShow
         qa_color_preview!!.setBackgroundColor(Color.parseColor(qaColor))
 
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)
-        qaIntent.putExtra("check", "0")
+        qaIntent.putExtra("use", false)
         startService(qaIntent)
 
     }

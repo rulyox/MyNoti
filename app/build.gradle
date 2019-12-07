@@ -8,8 +8,8 @@ android {
         applicationId "zyon.notifier"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1912
-        versionName '1.4.2'
+        versionCode 1912071633
+        versionName '1.5'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

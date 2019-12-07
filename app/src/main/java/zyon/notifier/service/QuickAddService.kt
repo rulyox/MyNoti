@@ -19,13 +19,13 @@ class QuickAddService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
         // get data from intent
-        val check = intent.getStringExtra("check")!!.toInt()
+        val use = intent.getBooleanExtra("use", false)
 
         // get data from preferences
         val prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
-        val color = prefs.getString("quickaddColor", "#FF4081")!!
+        val color = prefs.getString("QUICK_ADD_COLOR", "#3F51B5")!!
 
-        createQuickAdd(check != 0, color)
+        createQuickAdd(use, color)
 
         this.stopSelf()
 
@@ -33,16 +33,16 @@ class QuickAddService : Service() {
 
     }
 
-    private fun createQuickAdd(checked: Boolean, color: String) {
+    private fun createQuickAdd(use: Boolean, color: String) {
 
         val notificationMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val channelId = "QuickAdd"
 
-        if (checked) {
+        if (use) {
 
             val addIntent = Intent(this, AddDialogActivity::class.java)
-            addIntent.putExtra("qa", 1)
+            addIntent.putExtra("qa", true)
 
             val clickIntent = PendingIntent.getActivity(this, 0, addIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 

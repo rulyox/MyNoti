@@ -27,10 +27,10 @@ class EditDialogActivity : Activity() {
         // database
         val db = DBManager(this)
         val intent = intent
+        val notiId = intent.getLongExtra("id", -1)
         var title = intent.getStringExtra("title")
         var text = intent.getStringExtra("text")
         val color = intent.getStringExtra("color")
-        val notiId = intent.getLongExtra("noti_id", -1)
         var colorString = color
 
         color_preview_add.setBackgroundColor(Color.parseColor(colorString))
