@@ -26,4 +26,5 @@
     <string name="set_showtime">알림에 시간 표시</string>
     <string name="set_enableqa">활성화</string>
     <string name="set_qacolor">색 선택</string>
+    <string name="main_no_notifications">알림이 없습니다.</string>
 </resources>

@@ -6,8 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 
-import zyon.notifier.DBHelper
-import zyon.notifier.MainActivity
+import zyon.notifier.DBManager
 
 class ReviveService : Service() {
 
@@ -25,16 +24,16 @@ class ReviveService : Service() {
         }
 
         // database
-        val db = DBHelper(this).writableDatabase
-        val cursor = db.rawQuery("SELECT * FROM " + MainActivity.TABLE_NAME, null)
+        val db = DBManager(this)
+        val cursor = db.selectAll()
         cursor.moveToFirst()
 
         for(i in 0 until cursor.count) {
 
-            val id = cursor.getLong(cursor.getColumnIndex("_id"))
-            val title = cursor.getString(cursor.getColumnIndex("KEY_TITLE"))
-            val text = cursor.getString(cursor.getColumnIndex("KEY_TEXT"))
-            val color = cursor.getString(cursor.getColumnIndex("KEY_COLOR"))
+            val id = cursor.getLong(cursor.getColumnIndex("id"))
+            val title = cursor.getString(cursor.getColumnIndex("title"))
+            val text = cursor.getString(cursor.getColumnIndex("text"))
+            val color = cursor.getString(cursor.getColumnIndex("color"))
 
             // create notification
             val notifyIntent = Intent(this@ReviveService, NotiService::class.java)

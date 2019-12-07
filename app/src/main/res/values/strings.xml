@@ -4,6 +4,7 @@
     <string name="menu_set">Settings</string>
     <string name="menu_reset">Reset settings</string>
     <string name="main_notifications">Notifications</string>
+    <string name="main_no_notifications">There are no notifications.</string>
     <string name="main_modify">Modify</string>
     <string name="main_delete">Delete</string>
     <string name="qa">Quick Add</string>

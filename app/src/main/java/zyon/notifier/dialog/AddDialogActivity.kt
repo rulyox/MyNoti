@@ -12,8 +12,7 @@ import androidx.appcompat.app.AlertDialog
 
 import kotlinx.android.synthetic.main.dialog_add.*
 
-import zyon.notifier.DBHelper
-import zyon.notifier.MainActivity
+import zyon.notifier.DBManager
 import zyon.notifier.R
 import zyon.notifier.service.NotiService
 
@@ -35,7 +34,7 @@ class AddDialogActivity : Activity() {
         var colorString = prefs.getString("notiColor", "#3F51B5")
 
         // database
-        val db = DBHelper(this).writableDatabase
+        val db = DBManager(this)
 
         // color preview
         color_preview_add.setBackgroundColor(Color.parseColor(colorString))
@@ -83,7 +82,7 @@ class AddDialogActivity : Activity() {
             val text = dialog_text.text.toString()
 
             // add to database
-            db.execSQL("INSERT INTO " + MainActivity.TABLE_NAME + " VALUES ( " + notificationNumber + ", '" + title + "', '" + text + "', '" + colorString + "' );")
+            db.insert(notificationNumber, title, text, colorString!!)
 
             // create notification
             val notifyIntent = Intent(this@AddDialogActivity, NotiService::class.java)

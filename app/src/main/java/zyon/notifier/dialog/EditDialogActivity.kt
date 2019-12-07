@@ -11,8 +11,7 @@ import androidx.appcompat.app.AlertDialog
 
 import kotlinx.android.synthetic.main.dialog_edit.*
 
-import zyon.notifier.DBHelper
-import zyon.notifier.MainActivity
+import zyon.notifier.DBManager
 import zyon.notifier.R
 import zyon.notifier.service.NotiService
 
@@ -26,7 +25,7 @@ class EditDialogActivity : Activity() {
         setContentView(R.layout.dialog_edit)
 
         // database
-        val db = DBHelper(this).writableDatabase
+        val db = DBManager(this)
         val intent = intent
         var title = intent.getStringExtra("title")
         var text = intent.getStringExtra("text")
@@ -80,8 +79,7 @@ class EditDialogActivity : Activity() {
             text = dialog_text.text.toString()
 
             // update database
-            db.execSQL("DELETE FROM " + MainActivity.TABLE_NAME + " WHERE _id = " + notiId + ";")
-            db.execSQL("INSERT INTO " + MainActivity.TABLE_NAME + " VALUES ( " + notiId + ", '" + title + "', '" + text + "', '" + colorString + "' );")
+            db.update(notiId.toInt(), title!!, text!!, colorString!!)
 
             // create notification
             val notifyIntent = Intent(this@EditDialogActivity, NotiService::class.java)

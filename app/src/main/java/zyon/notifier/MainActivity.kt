@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -31,13 +30,7 @@ import zyon.notifier.service.ReviveService
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-
-        const val TABLE_NAME = "NOTI"
-
-    }
-
-    private var db: SQLiteDatabase? = null
+    private var db: DBManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
 
         // database
-        db = DBHelper(this).writableDatabase
+        db = DBManager(this)
 
         setUI()
         setList()
@@ -123,14 +116,16 @@ class MainActivity : AppCompatActivity() {
 
         val mArrayList: ArrayList<Notification> = ArrayList()
 
-        val cursor = db!!.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        val cursor = db!!.selectAll()
+
         cursor.moveToFirst()
+
         for (i in 0 until cursor.count) {
 
             val notification = Notification(
-                    cursor.getString(cursor.getColumnIndex("KEY_COLOR")),
-                    cursor.getString(cursor.getColumnIndex("KEY_TITLE")),
-                    cursor.getString(cursor.getColumnIndex("KEY_TEXT"))
+                    cursor.getString(cursor.getColumnIndex("color")),
+                    cursor.getString(cursor.getColumnIndex("title")),
+                    cursor.getString(cursor.getColumnIndex("text"))
             )
 
             mArrayList.add(notification)
@@ -138,6 +133,7 @@ class MainActivity : AppCompatActivity() {
             cursor.moveToNext()
 
         }
+
         cursor.close()
 
         val mAdapter = NotiAdapter(mArrayList, this)
@@ -148,7 +144,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showNoText() {
 
-        val cursor = db!!.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        val cursor = db!!.selectAll()
+
         cursor.moveToFirst()
 
         if(cursor.count == 0) {
@@ -170,13 +167,16 @@ class MainActivity : AppCompatActivity() {
     // edit or delete notification
     fun notiClicked(pos: Int) {
 
-        val cursor = db!!.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        val cursor = db!!.selectAll()
+
         cursor.moveToFirst()
+
         for (i in 0 until pos) cursor.moveToNext()
-        val notiId = cursor.getLong(cursor.getColumnIndex("_id"))
-        val title = cursor.getString(cursor.getColumnIndex("KEY_TITLE"))
-        val text = cursor.getString(cursor.getColumnIndex("KEY_TEXT"))
-        val color = cursor.getString(cursor.getColumnIndex("KEY_COLOR"))
+        val notiId = cursor.getLong(cursor.getColumnIndex("id"))
+        val title = cursor.getString(cursor.getColumnIndex("title"))
+        val text = cursor.getString(cursor.getColumnIndex("text"))
+        val color = cursor.getString(cursor.getColumnIndex("color"))
+
         cursor.close()
 
         // choose
@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 startService(deleteIntent)
 
                 // delete database
-                db!!.execSQL("DELETE FROM $TABLE_NAME WHERE _id = $notiId;")
+                db!!.delete(notiId.toInt())
                 setList()
 
                 Toast.makeText(this, getString(R.string.alert_deleted), Toast.LENGTH_SHORT).show()
