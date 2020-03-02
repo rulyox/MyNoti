@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 
 import zyon.notifier.dialog.AddDialogActivity
 import zyon.notifier.dialog.EditDialogActivity

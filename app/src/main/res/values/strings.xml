@@ -16,7 +16,7 @@
     <string name="alert_qa_en">Pull down the status bar.</string>
     <string name="alert_qa_dis">Quick Add is disabled.</string>
     <string name="alert_noemail">No email app is installed on this device.</string>
-    <string name="dialog_title">New notification</string>
+    <string name="dialog_title">New Notification</string>
     <string name="dialog_titlehint">Write title.</string>
     <string name="dialog_texthint">Write text.</string>
     <string name="dialog_color">Choose color</string>

@@ -10,10 +10,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="72dp"
-        android:text="@string/main_modify"
+        android:gravity="center_vertical"
         android:textSize="21sp"
         android:textColor="#000000"
-        android:gravity="center_vertical" />
+        android:fontFamily="@font/nanum_barun_gothic_bold"
+        android:text="@string/main_modify" />
 
     <Space
         android:layout_width="wrap_content"
@@ -23,8 +24,9 @@
         android:id="@+id/dialog_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/dialog_titlehint"
-        android:singleLine="true" >
+        android:fontFamily="@font/nanum_barun_gothic"
+        android:singleLine="true"
+        android:hint="@string/dialog_titlehint" >
         <requestFocus />
     </EditText>
 
@@ -32,8 +34,9 @@
         android:id="@+id/dialog_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/dialog_texthint"
-        android:singleLine="true" />
+        android:fontFamily="@font/nanum_barun_gothic"
+        android:singleLine="true"
+        android:hint="@string/dialog_texthint" />
 
     <Space
         android:layout_width="wrap_content"
@@ -52,6 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:fontFamily="@font/nanum_barun_gothic"
             android:text="@string/dialog_color" />
 
         <View
@@ -80,10 +84,11 @@
             android:layout_width="wrap_content"
             android:minWidth="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/dialog_cancel"
-            android:textColor="@color/colorAccent"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
+            android:textColor="@color/colorAccent"
+            android:fontFamily="@font/nanum_barun_gothic_bold"
+            android:text="@string/dialog_cancel"
             style="?android:attr/borderlessButtonStyle"/>
 
         <Button
@@ -91,10 +96,11 @@
             android:layout_width="wrap_content"
             android:minWidth="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/main_modify"
-            android:textColor="@color/colorAccent"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
+            android:textColor="@color/colorAccent"
+            android:fontFamily="@font/nanum_barun_gothic_bold"
+            android:text="@string/main_modify"
             style="?android:attr/borderlessButtonStyle"/>
 
     </LinearLayout>
