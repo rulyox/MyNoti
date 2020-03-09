@@ -12,7 +12,6 @@
         android:layout_height="72dp"
         android:gravity="center_vertical"
         android:textSize="21sp"
-        android:textColor="#000000"
         android:fontFamily="@font/nanum_barun_gothic_bold"
         android:text="@string/main_modify" />
 

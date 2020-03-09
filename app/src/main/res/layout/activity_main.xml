@@ -47,7 +47,6 @@
             android:gravity="center"
             android:text="@string/main_no_notifications"
             android:textSize="20sp"
-            android:textColor="#66000000"
             android:fontFamily="@font/nanum_barun_gothic_bold" />
 
         <LinearLayout
