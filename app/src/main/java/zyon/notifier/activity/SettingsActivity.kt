@@ -1,4 +1,4 @@
-package zyon.notifier
+package zyon.notifier.activity
 
 import android.app.Activity
 import android.content.*
@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_set.*
 import zyon.notifier.service.QuickAddService
 
 import com.chiralcode.colorpicker.ColorPicker
+import zyon.notifier.R
 
 class SettingsActivity : AppCompatActivity() {
 

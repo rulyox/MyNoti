@@ -1,4 +1,4 @@
-package zyon.notifier.dialog
+package zyon.notifier.activity
 
 import android.app.Activity
 import android.content.Context
@@ -12,9 +12,9 @@ import androidx.appcompat.app.AlertDialog
 
 import kotlinx.android.synthetic.main.dialog_add.*
 
-import zyon.notifier.DBManager
+import zyon.notifier.notification.Database
 import zyon.notifier.R
-import zyon.notifier.service.NotiService
+import zyon.notifier.service.NotificationService
 
 import com.chiralcode.colorpicker.ColorPicker
 
@@ -34,7 +34,7 @@ class AddDialogActivity : Activity() {
         var colorString = prefs.getString("NOTIFICATION_COLOR", "#3F51B5")
 
         // database
-        val db = DBManager(this)
+        val db = Database(this)
 
         // color preview
         color_preview_add.setBackgroundColor(Color.parseColor(colorString))
@@ -85,7 +85,7 @@ class AddDialogActivity : Activity() {
             db.insert(notificationNumber, title, text, colorString!!)
 
             // create notification
-            val notifyIntent = Intent(this@AddDialogActivity, NotiService::class.java)
+            val notifyIntent = Intent(this@AddDialogActivity, NotificationService::class.java)
             notifyIntent.putExtra("id", notificationNumber.toString() + "")
             notifyIntent.putExtra("title", title)
             notifyIntent.putExtra("text", text)

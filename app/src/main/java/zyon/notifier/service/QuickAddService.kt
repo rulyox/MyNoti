@@ -10,7 +10,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
 import zyon.notifier.R
-import zyon.notifier.dialog.AddDialogActivity
+import zyon.notifier.activity.AddDialogActivity
 
 class QuickAddService : Service() {
 

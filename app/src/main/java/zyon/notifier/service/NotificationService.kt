@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat
 
 import zyon.notifier.R
 
-class NotiService : Service() {
+class NotificationService : Service() {
 
     override fun onBind(intent: Intent): IBinder? { return null }
 

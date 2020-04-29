@@ -1,4 +1,4 @@
-package zyon.notifier.dialog
+package zyon.notifier.activity
 
 import android.app.Activity
 import android.content.DialogInterface
@@ -11,9 +11,9 @@ import androidx.appcompat.app.AlertDialog
 
 import kotlinx.android.synthetic.main.dialog_edit.*
 
-import zyon.notifier.DBManager
+import zyon.notifier.notification.Database
 import zyon.notifier.R
-import zyon.notifier.service.NotiService
+import zyon.notifier.service.NotificationService
 
 import com.chiralcode.colorpicker.ColorPicker
 
@@ -25,7 +25,7 @@ class EditDialogActivity : Activity() {
         setContentView(R.layout.dialog_edit)
 
         // database
-        val db = DBManager(this)
+        val db = Database(this)
         val intent = intent
         val notiId = intent.getLongExtra("id", -1)
         var title = intent.getStringExtra("title")
@@ -82,7 +82,7 @@ class EditDialogActivity : Activity() {
             db.update(notiId.toInt(), title!!, text!!, colorString!!)
 
             // create notification
-            val notifyIntent = Intent(this@EditDialogActivity, NotiService::class.java)
+            val notifyIntent = Intent(this@EditDialogActivity, NotificationService::class.java)
             notifyIntent.putExtra("id", notiId.toString())
             notifyIntent.putExtra("title", title)
             notifyIntent.putExtra("text", text)

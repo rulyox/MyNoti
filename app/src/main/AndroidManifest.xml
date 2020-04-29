@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -31,26 +31,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:label="@string/menu_set" />
         <activity
-            android:name=".dialog.AddDialogActivity"
+            android:name=".activity.AddDialogActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/DialogTheme"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".dialog.EditDialogActivity"
+            android:name=".activity.EditDialogActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/DialogTheme"
             android:windowSoftInputMode="stateVisible" />
 
-        <service android:name=".service.NotiService" />
+        <service android:name=".service.NotificationService" />
         <service android:name=".service.QuickAddService" />
         <service android:name=".service.ReviveService" />
 
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".service.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

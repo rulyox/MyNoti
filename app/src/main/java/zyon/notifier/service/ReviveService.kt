@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 
-import zyon.notifier.DBManager
+import zyon.notifier.notification.Database
 
 class ReviveService : Service() {
 
@@ -26,7 +26,7 @@ class ReviveService : Service() {
         }
 
         // database
-        val db = DBManager(this)
+        val db = Database(this)
         val cursor = db.selectAll()
         cursor.moveToFirst()
 
@@ -38,7 +38,7 @@ class ReviveService : Service() {
             val color = cursor.getString(cursor.getColumnIndex("color"))
 
             // create notification
-            val notifyIntent = Intent(this@ReviveService, NotiService::class.java)
+            val notifyIntent = Intent(this@ReviveService, NotificationService::class.java)
             notifyIntent.putExtra("id", id.toString() + "")
             notifyIntent.putExtra("title", title)
             notifyIntent.putExtra("text", text)

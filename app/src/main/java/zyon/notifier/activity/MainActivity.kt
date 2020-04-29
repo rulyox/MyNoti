@@ -1,4 +1,4 @@
-package zyon.notifier
+package zyon.notifier.activity
 
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -19,17 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import java.util.*
 
 import kotlinx.android.synthetic.main.activity_main.*
+import zyon.notifier.notification.Database
+import zyon.notifier.R
 
-import zyon.notifier.dialog.AddDialogActivity
-import zyon.notifier.dialog.EditDialogActivity
-import zyon.notifier.notification.NotiAdapter
+import zyon.notifier.notification.NotificationAdapter
 import zyon.notifier.notification.Notification
-import zyon.notifier.service.NotiService
+import zyon.notifier.service.NotificationService
 import zyon.notifier.service.ReviveService
 
 class MainActivity : AppCompatActivity() {
 
-    private var db: DBManager? = null
+    private val db: Database = Database(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
-
-        // database
-        db = DBManager(this)
 
         setUI()
         setList()
@@ -115,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
         val mArrayList: ArrayList<Notification> = ArrayList()
 
-        val cursor = db!!.selectAll()
+        val cursor = db.selectAll()
 
         cursor.moveToFirst()
 
@@ -135,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 
         cursor.close()
 
-        val mAdapter = NotiAdapter(mArrayList, this)
+        val mAdapter = NotificationAdapter(mArrayList, this)
         list_main_recycler.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
 
@@ -143,7 +140,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showNoText() {
 
-        val cursor = db!!.selectAll()
+        val cursor = db.selectAll()
 
         cursor.moveToFirst()
 
@@ -166,7 +163,7 @@ class MainActivity : AppCompatActivity() {
     // edit or delete notification
     fun notiClicked(pos: Int) {
 
-        val cursor = db!!.selectAll()
+        val cursor = db.selectAll()
 
         cursor.moveToFirst()
 
@@ -194,12 +191,12 @@ class MainActivity : AppCompatActivity() {
             } else if (id == 1) { // delete
 
                 // delete notification
-                val deleteIntent = Intent(this@MainActivity, NotiService::class.java)
+                val deleteIntent = Intent(this@MainActivity, NotificationService::class.java)
                 deleteIntent.putExtra("id", (-1 * notiId).toString())
                 startService(deleteIntent)
 
                 // delete database
-                db!!.delete(notiId.toInt())
+                db.delete(notiId.toInt())
                 setList()
 
                 Toast.makeText(this, getString(R.string.alert_deleted), Toast.LENGTH_SHORT).show()

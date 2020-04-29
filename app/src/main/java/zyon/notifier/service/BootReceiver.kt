@@ -1,11 +1,9 @@
-package zyon.notifier
+package zyon.notifier.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-
-import zyon.notifier.service.ReviveService
 
 class BootReceiver : BroadcastReceiver() {
 

@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import java.lang.ref.WeakReference
 
-import zyon.notifier.MainActivity
+import zyon.notifier.activity.MainActivity
 import zyon.notifier.R
 
-class NotiAdapter(private val mList: ArrayList<Notification>?, context: Context) : RecyclerView.Adapter<NotiAdapter.CustomViewHolder>() {
+class NotificationAdapter(private val mList: ArrayList<Notification>?, context: Context) : RecyclerView.Adapter<NotificationAdapter.CustomViewHolder>() {
 
     private val mContextWeakReference = WeakReference(context)
 
