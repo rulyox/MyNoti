@@ -10,26 +10,24 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-
-import java.util.*
-
 import kotlinx.android.synthetic.main.activity_main.*
-import zyon.notifier.notification.Database
 import zyon.notifier.R
-
-import zyon.notifier.notification.NotificationAdapter
+import zyon.notifier.adapter.NotificationAdapter
+import zyon.notifier.notification.Database
 import zyon.notifier.notification.Notification
-import zyon.notifier.service.NotificationService
 import zyon.notifier.service.ReviveService
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private val db: Database = Database(this)
+
+    companion object {
+        lateinit var notificationAdapter: NotificationAdapter
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,9 +130,9 @@ class MainActivity : AppCompatActivity() {
 
         cursor.close()
 
-        val mAdapter = NotificationAdapter(mArrayList, this)
-        list_main_recycler.adapter = mAdapter
-        mAdapter.notifyDataSetChanged()
+        notificationAdapter = NotificationAdapter(mArrayList)
+        list_main_recycler.adapter = notificationAdapter
+        notificationAdapter.notifyDataSetChanged()
 
     }
 
@@ -157,55 +155,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         cursor.close()
-
-    }
-
-    // edit or delete notification
-    fun notiClicked(pos: Int) {
-
-        val cursor = db.selectAll()
-
-        cursor.moveToFirst()
-
-        for (i in 0 until pos) cursor.moveToNext()
-        val notiId = cursor.getLong(cursor.getColumnIndex("id"))
-        val title = cursor.getString(cursor.getColumnIndex("title"))
-        val text = cursor.getString(cursor.getColumnIndex("text"))
-        val color = cursor.getString(cursor.getColumnIndex("color"))
-
-        cursor.close()
-
-        // choose
-        val alertDialogBuilder = AlertDialog.Builder(this@MainActivity, R.style.DialogTheme)
-        alertDialogBuilder.setItems(arrayOf(getString(R.string.main_modify), getString(R.string.main_delete))) { dialog, id ->
-
-            if (id == 0) { // edit
-
-                val editIntent = Intent(this@MainActivity, EditDialogActivity::class.java)
-                editIntent.putExtra("id", notiId)
-                editIntent.putExtra("title", title)
-                editIntent.putExtra("text", text)
-                editIntent.putExtra("color", color)
-                startActivityForResult(editIntent, 2)
-
-            } else if (id == 1) { // delete
-
-                // delete notification
-                val deleteIntent = Intent(this@MainActivity, NotificationService::class.java)
-                deleteIntent.putExtra("id", (-1 * notiId).toString())
-                startService(deleteIntent)
-
-                // delete database
-                db.delete(notiId.toInt())
-                setList()
-
-                Toast.makeText(this, getString(R.string.alert_deleted), Toast.LENGTH_SHORT).show()
-
-            }
-
-        }
-
-        alertDialogBuilder.create().show()
 
     }
 

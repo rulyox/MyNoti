@@ -6,42 +6,56 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
-
 import androidx.appcompat.app.AlertDialog
-
+import com.chiralcode.colorpicker.ColorPicker
 import kotlinx.android.synthetic.main.dialog_edit.*
-
-import zyon.notifier.notification.Database
 import zyon.notifier.R
+import zyon.notifier.notification.Database
+import zyon.notifier.notification.Notification
 import zyon.notifier.service.NotificationService
 
-import com.chiralcode.colorpicker.ColorPicker
-
 class EditDialogActivity : Activity() {
+
+    private val db = Database(this)
+
+    private var position: Int = -1
+    private var notiId: Long = -1
+    private var title = ""
+    private var text = ""
+    private var color = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_edit)
 
-        // database
-        val db = Database(this)
+        loadIntentData()
+        initUI()
+
+    }
+
+    private fun loadIntentData() {
+
         val intent = intent
-        val notiId = intent.getLongExtra("id", -1)
-        var title = intent.getStringExtra("title")
-        var text = intent.getStringExtra("text")
-        val color = intent.getStringExtra("color")
-        var colorString = color
+        position = intent.getIntExtra("position", -1)
+        notiId = intent.getLongExtra("id", -1)
+        title = intent.getStringExtra("title") ?: ""
+        text = intent.getStringExtra("text") ?: ""
+        color = intent.getStringExtra("color") ?: ""
 
-        color_preview_add.setBackgroundColor(Color.parseColor(colorString))
+    }
 
+    private fun initUI() {
+
+        // set data from previous notification
         dialog_title.setText(title)
         dialog_text.setText(text)
+        color_preview_add.setBackgroundColor(Color.parseColor(color))
 
         color_choose_add.setOnClickListener {
 
             // open color picker dialog
-            val initialColor = Color.parseColor(colorString)
+            val initialColor = Color.parseColor(color)
 
             val alertDialogBuilder = AlertDialog.Builder(this@EditDialogActivity, R.style.DialogTheme)
 
@@ -56,8 +70,8 @@ class EditDialogActivity : Activity() {
 
                         val selectedColor: Int = colorPickerView.color
 
-                        colorString = String.format("#%06X", 0xFFFFFF and selectedColor)
-                        color_preview_add.setBackgroundColor(Color.parseColor(colorString))
+                        color = String.format("#%06X", 0xFFFFFF and selectedColor)
+                        color_preview_add.setBackgroundColor(Color.parseColor(color))
 
                     }
 
@@ -79,17 +93,20 @@ class EditDialogActivity : Activity() {
             text = dialog_text.text.toString()
 
             // update database
-            db.update(notiId.toInt(), title!!, text!!, colorString!!)
+            db.update(notiId.toInt(), title, text, color)
 
             // create notification
             val notifyIntent = Intent(this@EditDialogActivity, NotificationService::class.java)
             notifyIntent.putExtra("id", notiId.toString())
             notifyIntent.putExtra("title", title)
             notifyIntent.putExtra("text", text)
-            notifyIntent.putExtra("color", colorString)
+            notifyIntent.putExtra("color", color)
             startService(notifyIntent)
 
-            setResult(RESULT_OK, Intent())
+            val newNotification = Notification(color, title, text)
+
+            MainActivity.notificationAdapter.updateItem(position, newNotification)
+
             finish()
 
         }
