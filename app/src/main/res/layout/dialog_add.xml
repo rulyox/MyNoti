@@ -12,6 +12,7 @@
         android:layout_height="72dp"
 		android:gravity="center_vertical"
         android:textSize="21sp"
+		android:textColor="@color/colorText"
 		android:fontFamily="@font/nanum_barun_gothic_bold"
 		android:text="@string/dialog_title" />
 
@@ -54,6 +55,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="18sp"
+			android:textColor="@color/colorText"
 			android:fontFamily="@font/nanum_barun_gothic"
 			android:text="@string/dialog_color" />
 
