@@ -19,7 +19,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@drawable/dialog_corner</item>
+        <item name="android:windowBackground">@drawable/shape_dialog</item>
         <item name="android:background">@color/colorBackground</item>
     </style>
 

@@ -42,8 +42,9 @@
                 android:layout_weight="1" />
             <View
                 android:id="@+id/color_preview"
-                android:layout_width="45sp"
-                android:layout_height="20sp" />
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/shape_circle"/>
         </LinearLayout>
 
         <View
@@ -109,8 +110,9 @@
                 android:layout_weight="1" />
             <View
                 android:id="@+id/qa_color_preview"
-                android:layout_width="45sp"
-                android:layout_height="20sp" />
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/shape_circle"/>
         </LinearLayout>
 
         <View

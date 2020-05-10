@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Window
 import androidx.appcompat.app.AlertDialog
@@ -50,7 +52,9 @@ class EditDialogActivity : Activity() {
         // set data from previous notification
         dialog_title.setText(title)
         dialog_text.setText(text)
-        color_preview_add.setBackgroundColor(Color.parseColor(color))
+
+        val background: Drawable = color_preview_add.background
+        if(background is GradientDrawable) background.setColor(Color.parseColor(color))
 
         color_choose_add.setOnClickListener {
 
@@ -71,7 +75,9 @@ class EditDialogActivity : Activity() {
                         val selectedColor: Int = colorPickerView.color
 
                         color = String.format("#%06X", 0xFFFFFF and selectedColor)
-                        color_preview_add.setBackgroundColor(Color.parseColor(color))
+
+                        val background: Drawable = color_preview_add.background
+                        if(background is GradientDrawable) background.setColor(Color.parseColor(color))
 
                     }
 

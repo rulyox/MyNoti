@@ -1,6 +1,8 @@
 package zyon.notifier.adapter
 
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +22,15 @@ class NotificationAdapter(private val notificationList: ArrayList<Notification>?
 
     override fun onBindViewHolder(viewholder: NotificationViewHolder, position: Int) {
 
-        viewholder.color.setBackgroundColor(Color.parseColor(notificationList!![position].color))
-        viewholder.title.text = notificationList[position].title
-        viewholder.text.text = notificationList[position].text
+        if(notificationList == null) return
+
+        val notification = notificationList[position]
+
+        val background: Drawable = viewholder.color.background
+        if(background is GradientDrawable) background.setColor(Color.parseColor(notification.color))
+
+        viewholder.title.text = notification.title
+        viewholder.text.text = notification.text
 
     }
 

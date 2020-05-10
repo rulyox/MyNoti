@@ -5,18 +5,16 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Window
-
 import androidx.appcompat.app.AlertDialog
-
-import kotlinx.android.synthetic.main.dialog_add.*
-
-import zyon.notifier.notification.Database
-import zyon.notifier.R
-import zyon.notifier.service.NotificationService
-
 import com.chiralcode.colorpicker.ColorPicker
+import kotlinx.android.synthetic.main.dialog_add.*
+import zyon.notifier.R
+import zyon.notifier.notification.Database
+import zyon.notifier.service.NotificationService
 
 class AddDialogActivity : Activity() {
 
@@ -37,7 +35,8 @@ class AddDialogActivity : Activity() {
         val db = Database(this)
 
         // color preview
-        color_preview_add.setBackgroundColor(Color.parseColor(colorString))
+        val background: Drawable = color_preview_add.background
+        if(background is GradientDrawable) background.setColor(Color.parseColor(colorString))
 
         // color dialog button
         color_choose_add.setOnClickListener {
@@ -59,7 +58,9 @@ class AddDialogActivity : Activity() {
                         val selectedColor: Int = colorPickerView.color
 
                         colorString = String.format("#%06X", 0xFFFFFF and selectedColor)
-                        color_preview_add.setBackgroundColor(Color.parseColor(colorString))
+
+                        val background: Drawable = color_preview_add.background
+                        if(background is GradientDrawable) background.setColor(Color.parseColor(colorString))
 
                     }
 

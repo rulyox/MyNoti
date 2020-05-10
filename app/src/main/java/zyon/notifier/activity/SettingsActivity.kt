@@ -3,6 +3,8 @@ package zyon.notifier.activity
 import android.app.Activity
 import android.content.*
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -97,7 +99,8 @@ class SettingsActivity : AppCompatActivity() {
     // notification settings
     private fun setNoti() {
 
-        color_preview.setBackgroundColor(Color.parseColor(notiColor))
+        val background: Drawable = color_preview.background
+        if(background is GradientDrawable) background.setColor(Color.parseColor(notiColor))
 
         // choose color
         color_choose.setOnClickListener {
@@ -122,7 +125,9 @@ class SettingsActivity : AppCompatActivity() {
                         val editor = prefs!!.edit()
                         editor.putString("NOTIFICATION_COLOR", notiColor)
                         editor.apply()
-                        color_preview!!.setBackgroundColor(Color.parseColor(notiColor))
+
+                        val background: Drawable = color_preview.background
+                        if(background is GradientDrawable) background.setColor(Color.parseColor(notiColor))
 
                     }
 
@@ -143,7 +148,8 @@ class SettingsActivity : AppCompatActivity() {
     // quick add settings
     private fun setQA() {
 
-        qa_color_preview.setBackgroundColor(Color.parseColor(qaColor))
+        val background: Drawable = qa_color_preview.background
+        if(background is GradientDrawable) background.setColor(Color.parseColor(qaColor))
 
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)
 
@@ -200,7 +206,9 @@ class SettingsActivity : AppCompatActivity() {
                         editor.apply()
                         qaIntent.putExtra("check", qaShow.toString() + "")
                         startService(qaIntent)
-                        qa_color_preview!!.setBackgroundColor(Color.parseColor(qaColor))
+
+                        val background: Drawable = qa_color_preview.background
+                        if(background is GradientDrawable) background.setColor(Color.parseColor(qaColor))
 
                     }
 
@@ -231,9 +239,13 @@ class SettingsActivity : AppCompatActivity() {
         editor.putString("QUICK_ADD_COLOR", qaColor)
         editor.apply()
 
-        color_preview!!.setBackgroundColor(Color.parseColor(notiColor))
         switch_quickadd.isChecked = qaShow
-        qa_color_preview!!.setBackgroundColor(Color.parseColor(qaColor))
+
+        val notiColorBackground: Drawable = color_preview.background
+        if(notiColorBackground is GradientDrawable) notiColorBackground.setColor(Color.parseColor(notiColor))
+
+        val qaColorBackground: Drawable = qa_color_preview.background
+        if(qaColorBackground is GradientDrawable) qaColorBackground.setColor(Color.parseColor(qaColor))
 
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)
         qaIntent.putExtra("use", false)
