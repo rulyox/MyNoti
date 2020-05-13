@@ -9,62 +9,63 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import zyon.notifier.R
 import zyon.notifier.activity.EditDialogActivity
-import zyon.notifier.notification.Database
+import zyon.notifier.activity.MainActivity
+import zyon.notifier.notification.DAO
+import zyon.notifier.notification.Notification
 import zyon.notifier.service.NotificationService
 
 class NotificationViewHolder(view: View, adapter: NotificationAdapter): RecyclerView.ViewHolder(view) {
 
+    companion object {
+        const val DIALOG_CHOOSE_EDIT = 0
+        const val DIALOG_CHOOSE_DELETE = 1
+    }
+
     private val parent by lazy { view.findViewById(R.id.item_parent) as LinearLayout }
-    val color by lazy { view.findViewById(R.id.item_color) as View }
     val title by lazy { view.findViewById(R.id.item_title) as TextView }
     val text by lazy { view.findViewById(R.id.item_text) as TextView }
+    val color by lazy { view.findViewById(R.id.item_color) as View }
 
     init {
 
         val context = view.context
-
-        val db = Database(context)
+        val dao = DAO(context)
 
         // click anywhere
         parent.setOnClickListener {
 
-            val cursor = db.selectAll()
-
-            cursor.moveToFirst()
-
-            for (i in 0 until adapterPosition) cursor.moveToNext()
-            val notiId = cursor.getLong(cursor.getColumnIndex("id"))
-            val title = cursor.getString(cursor.getColumnIndex("title"))
-            val text = cursor.getString(cursor.getColumnIndex("text"))
-            val color = cursor.getString(cursor.getColumnIndex("color"))
-
-            cursor.close()
+            val notificationList: ArrayList<Notification> = dao.getNotificationList()
+            val notification: Notification = notificationList[adapterPosition]
 
             val alertDialogBuilder = AlertDialog.Builder(context, R.style.DialogTheme)
             alertDialogBuilder.setItems(arrayOf(context.getString(R.string.main_modify), context.getString(R.string.main_delete))) { dialog, id ->
 
-                if (id == 0) { // edit
+                if (id == DIALOG_CHOOSE_EDIT) {
 
+                        // start dialog activity
                         val editIntent = Intent(context, EditDialogActivity::class.java)
                         editIntent.putExtra("position", adapterPosition)
-                        editIntent.putExtra("id", notiId)
-                        editIntent.putExtra("title", title)
-                        editIntent.putExtra("text", text)
-                        editIntent.putExtra("color", color)
+                        editIntent.putExtra("id", notification.id)
+                        editIntent.putExtra("title", notification.title)
+                        editIntent.putExtra("text", notification.text)
+                        editIntent.putExtra("color", notification.color)
                         context.startActivity(editIntent)
 
-                    } else if (id == 1) { // delete
+                    } else if (id == DIALOG_CHOOSE_DELETE) {
 
                         // delete notification
                         val deleteIntent = Intent(context, NotificationService::class.java)
-                        deleteIntent.putExtra("id", (-1 * notiId).toString())
+                        deleteIntent.putExtra("action", "remove")
+                        deleteIntent.putExtra("id", notification.id)
                         context.startService(deleteIntent)
 
                         // delete database
-                        db.delete(notiId.toInt())
+                        dao.deleteNotification(notification.id)
 
                         // delete from list
-                        adapter.deleteItem(adapterPosition)
+                        MainActivity.deleteNotification(adapterPosition)
+
+                        (context as MainActivity).showEmptyText()
 
                         Toast.makeText(context, context.getString(R.string.alert_deleted), Toast.LENGTH_SHORT).show()
 

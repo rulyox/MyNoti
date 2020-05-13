@@ -1,7 +1,6 @@
 package zyon.notifier.adapter
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -26,8 +25,8 @@ class NotificationAdapter(private val notificationList: ArrayList<Notification>?
 
         val notification = notificationList[position]
 
-        val background: Drawable = viewholder.color.background
-        if(background is GradientDrawable) background.setColor(Color.parseColor(notification.color))
+        val previewBackground = viewholder.color.background as GradientDrawable
+        previewBackground.setColor(Color.parseColor(notification.color))
 
         viewholder.title.text = notification.title
         viewholder.text.text = notification.text
