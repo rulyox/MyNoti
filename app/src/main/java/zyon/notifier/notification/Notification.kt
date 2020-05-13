@@ -1,7 +1,8 @@
 package zyon.notifier.notification
 
 data class Notification(
-        var color: String,
+        var id: Int,
         var title: String,
-        var text: String
+        var text: String,
+        var color: String
 )

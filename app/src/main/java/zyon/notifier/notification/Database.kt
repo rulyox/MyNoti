@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class Database(context: Context) : SQLiteOpenHelper(context, "notification.db", null, 1) {
+class Database(context: Context): SQLiteOpenHelper(context, "notification.db", null, 1) {
 
     private val table = "notification"
 
@@ -66,6 +66,16 @@ class Database(context: Context) : SQLiteOpenHelper(context, "notification.db", 
         val query = String.format(
                 "SELECT * FROM %s",
                 table)
+
+        return writableDatabase.rawQuery(query, null)
+
+    }
+
+    fun select(id: Int): Cursor {
+
+        val query = String.format(
+                "SELECT * FROM %s WHERE id = %d",
+                table, id)
 
         return writableDatabase.rawQuery(query, null)
 
