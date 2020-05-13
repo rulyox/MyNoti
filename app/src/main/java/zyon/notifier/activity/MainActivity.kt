@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(main_toolbar)
         registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
 
         setUI()
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUI() {
 
         // add button
-        fab.setOnClickListener {
+        main_fab.setOnClickListener {
 
             val addDialogIntent = Intent(this@MainActivity, AddDialogActivity::class.java)
             startActivityForResult(addDialogIntent, 1)
@@ -99,8 +99,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         // recycler view
-        list_main_recycler.layoutManager = LinearLayoutManager(this)
-        list_main_recycler.addItemDecoration(DividerItemDecoration(list_main_recycler.context, DividerItemDecoration.VERTICAL))
+        main_recycler.layoutManager = LinearLayoutManager(this)
+        main_recycler.addItemDecoration(DividerItemDecoration(main_recycler.context, DividerItemDecoration.VERTICAL))
 
     }
 
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
         cursor.close()
 
         notificationAdapter = NotificationAdapter(mArrayList)
-        list_main_recycler.adapter = notificationAdapter
+        main_recycler.adapter = notificationAdapter
         notificationAdapter.notifyDataSetChanged()
 
     }
@@ -144,13 +144,13 @@ class MainActivity : AppCompatActivity() {
 
         if(cursor.count == 0) {
 
-            main_text_no_notifications.visibility = View.VISIBLE
-            main_notifications_parent.visibility = View.GONE
+            main_text_empty.visibility = View.VISIBLE
+            main_container.visibility = View.GONE
 
         } else {
 
-            main_text_no_notifications.visibility = View.GONE
-            main_notifications_parent.visibility = View.VISIBLE
+            main_text_empty.visibility = View.GONE
+            main_container.visibility = View.VISIBLE
 
         }
 

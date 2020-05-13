@@ -1,6 +1,5 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_set"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground" >
@@ -20,7 +19,7 @@
             android:text="@string/set_noti" />
 
         <LinearLayout
-            android:id="@+id/color_choose"
+            android:id="@+id/settings_color_container"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +40,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
             <View
-                android:id="@+id/color_preview"
+                android:id="@+id/settings_color_preview"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:background="@drawable/shape_circle"/>
@@ -73,7 +72,7 @@
             android:paddingRight="4dp"
             android:paddingTop="16dp" >
             <Switch
-                android:id="@+id/switch_quickadd"
+                android:id="@+id/settings_switch_qa"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
@@ -88,7 +87,7 @@
             android:background="#1E000000" />
 
         <LinearLayout
-            android:id="@+id/qa_color_choose"
+            android:id="@+id/settings_qa_color_container"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,7 +108,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
             <View
-                android:id="@+id/qa_color_preview"
+                android:id="@+id/settings_qa_color_preview"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:background="@drawable/shape_circle"/>

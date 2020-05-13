@@ -53,10 +53,10 @@ class EditDialogActivity : Activity() {
         dialog_title.setText(title)
         dialog_text.setText(text)
 
-        val background: Drawable = color_preview_add.background
+        val background: Drawable = dialog_color_preview.background
         if(background is GradientDrawable) background.setColor(Color.parseColor(color))
 
-        color_choose_add.setOnClickListener {
+        dialog_color_container.setOnClickListener {
 
             // open color picker dialog
             val initialColor = Color.parseColor(color)
@@ -76,7 +76,7 @@ class EditDialogActivity : Activity() {
 
                         color = String.format("#%06X", 0xFFFFFF and selectedColor)
 
-                        val background: Drawable = color_preview_add.background
+                        val background: Drawable = dialog_color_preview.background
                         if(background is GradientDrawable) background.setColor(Color.parseColor(color))
 
                     }
@@ -93,7 +93,7 @@ class EditDialogActivity : Activity() {
 
         }
 
-        button_add.setOnClickListener {
+        dialog_button_add.setOnClickListener {
 
             title = dialog_title.text.toString()
             text = dialog_text.text.toString()
@@ -117,7 +117,7 @@ class EditDialogActivity : Activity() {
 
         }
 
-        button_cancel.setOnClickListener { finish() }
+        dialog_button_cancel.setOnClickListener { finish() }
 
     }
 

@@ -9,16 +9,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-
-import kotlinx.android.synthetic.main.activity_set.*
-
-import zyon.notifier.service.QuickAddService
-
 import com.chiralcode.colorpicker.ColorPicker
+import kotlinx.android.synthetic.main.activity_settings.*
 import zyon.notifier.R
+import zyon.notifier.service.QuickAddService
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -30,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_set)
+        setContentView(R.layout.activity_settings)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
@@ -99,11 +95,11 @@ class SettingsActivity : AppCompatActivity() {
     // notification settings
     private fun setNoti() {
 
-        val background: Drawable = color_preview.background
+        val background: Drawable = settings_color_preview.background
         if(background is GradientDrawable) background.setColor(Color.parseColor(notiColor))
 
         // choose color
-        color_choose.setOnClickListener {
+        settings_color_container.setOnClickListener {
 
             // open color picker dialog
             val initialColor = Color.parseColor(notiColor)
@@ -126,7 +122,7 @@ class SettingsActivity : AppCompatActivity() {
                         editor.putString("NOTIFICATION_COLOR", notiColor)
                         editor.apply()
 
-                        val background: Drawable = color_preview.background
+                        val background: Drawable = settings_color_preview.background
                         if(background is GradientDrawable) background.setColor(Color.parseColor(notiColor))
 
                     }
@@ -148,14 +144,14 @@ class SettingsActivity : AppCompatActivity() {
     // quick add settings
     private fun setQA() {
 
-        val background: Drawable = qa_color_preview.background
+        val background: Drawable = settings_qa_color_preview.background
         if(background is GradientDrawable) background.setColor(Color.parseColor(qaColor))
 
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)
 
         // activate
-        switch_quickadd.isChecked = qaShow
-        switch_quickadd.setOnCheckedChangeListener { buttonView, isChecked ->
+        settings_switch_qa.isChecked = qaShow
+        settings_switch_qa.setOnCheckedChangeListener { buttonView, isChecked ->
 
             if (isChecked) Toast.makeText(this, getString(R.string.alert_qa_en), Toast.LENGTH_SHORT).show()
             else Toast.makeText(this, getString(R.string.alert_qa_dis), Toast.LENGTH_SHORT).show()
@@ -182,7 +178,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // choose color
-        qa_color_choose.setOnClickListener {
+        settings_qa_color_container.setOnClickListener {
 
             // open color picker dialog
             val initialColor = Color.parseColor(qaColor)
@@ -207,7 +203,7 @@ class SettingsActivity : AppCompatActivity() {
                         qaIntent.putExtra("check", qaShow.toString() + "")
                         startService(qaIntent)
 
-                        val background: Drawable = qa_color_preview.background
+                        val background: Drawable = settings_qa_color_preview.background
                         if(background is GradientDrawable) background.setColor(Color.parseColor(qaColor))
 
                     }
@@ -239,12 +235,12 @@ class SettingsActivity : AppCompatActivity() {
         editor.putString("QUICK_ADD_COLOR", qaColor)
         editor.apply()
 
-        switch_quickadd.isChecked = qaShow
+        settings_switch_qa.isChecked = qaShow
 
-        val notiColorBackground: Drawable = color_preview.background
+        val notiColorBackground: Drawable = settings_color_preview.background
         if(notiColorBackground is GradientDrawable) notiColorBackground.setColor(Color.parseColor(notiColor))
 
-        val qaColorBackground: Drawable = qa_color_preview.background
+        val qaColorBackground: Drawable = settings_qa_color_preview.background
         if(qaColorBackground is GradientDrawable) qaColorBackground.setColor(Color.parseColor(qaColor))
 
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)

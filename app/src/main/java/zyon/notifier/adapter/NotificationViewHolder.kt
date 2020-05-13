@@ -14,10 +14,10 @@ import zyon.notifier.service.NotificationService
 
 class NotificationViewHolder(view: View, adapter: NotificationAdapter): RecyclerView.ViewHolder(view) {
 
-    private val parent by lazy { view.findViewById(R.id.list_main) as LinearLayout }
-    val color by lazy { view.findViewById(R.id.list_main_color) as View }
-    val title by lazy { view.findViewById(R.id.list_main_title) as TextView }
-    val text by lazy { view.findViewById(R.id.list_main_text) as TextView }
+    private val parent by lazy { view.findViewById(R.id.item_parent) as LinearLayout }
+    val color by lazy { view.findViewById(R.id.item_color) as View }
+    val title by lazy { view.findViewById(R.id.item_title) as TextView }
+    val text by lazy { view.findViewById(R.id.item_text) as TextView }
 
     init {
 

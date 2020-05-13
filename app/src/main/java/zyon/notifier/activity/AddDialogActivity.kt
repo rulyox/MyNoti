@@ -35,11 +35,11 @@ class AddDialogActivity : Activity() {
         val db = Database(this)
 
         // color preview
-        val background: Drawable = color_preview_add.background
+        val background: Drawable = dialog_color_preview.background
         if(background is GradientDrawable) background.setColor(Color.parseColor(colorString))
 
         // color dialog button
-        color_choose_add.setOnClickListener {
+        dialog_color_container.setOnClickListener {
 
             // open color picker dialog
             val initialColor = Color.parseColor(colorString)
@@ -59,7 +59,7 @@ class AddDialogActivity : Activity() {
 
                         colorString = String.format("#%06X", 0xFFFFFF and selectedColor)
 
-                        val background: Drawable = color_preview_add.background
+                        val background: Drawable = dialog_color_preview.background
                         if(background is GradientDrawable) background.setColor(Color.parseColor(colorString))
 
                     }
@@ -77,7 +77,7 @@ class AddDialogActivity : Activity() {
         }
 
         // add button
-        button_add.setOnClickListener {
+        dialog_button_add.setOnClickListener {
 
             val title = dialog_title.text.toString()
             val text = dialog_text.text.toString()
@@ -105,7 +105,7 @@ class AddDialogActivity : Activity() {
         }
 
         // cancel button
-        button_cancel.setOnClickListener {
+        dialog_button_cancel.setOnClickListener {
 
             finish()
 
