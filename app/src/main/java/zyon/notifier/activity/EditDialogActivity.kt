@@ -1,97 +1,51 @@
 package zyon.notifier.activity
 
-import android.app.Activity
-import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Window
-import androidx.appcompat.app.AlertDialog
-import com.chiralcode.colorpicker.ColorPicker
-import kotlinx.android.synthetic.main.dialog_edit.*
+import kotlinx.android.synthetic.main.dialog.*
 import zyon.notifier.R
-import zyon.notifier.notification.Database
+import zyon.notifier.notification.DAO
 import zyon.notifier.notification.Notification
-import zyon.notifier.service.NotificationService
 
-class EditDialogActivity : Activity() {
+class EditDialogActivity: AbstractDialogActivity() {
 
-    private val db = Database(this)
-
-    private var position: Int = -1
-    private var notiId: Long = -1
-    private var title = ""
-    private var text = ""
-    private var color = ""
+    private var position: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.dialog_edit)
+        setContentView(R.layout.dialog)
+
+        dao = DAO(this)
 
         loadIntentData()
         initUI()
 
     }
 
-    private fun loadIntentData() {
+    override fun loadIntentData() {
 
         val intent = intent
-        position = intent.getIntExtra("position", -1)
-        notiId = intent.getLongExtra("id", -1)
+
+        position = intent.getIntExtra("position", 0)
+        id = intent.getIntExtra("id", 0)
         title = intent.getStringExtra("title") ?: ""
         text = intent.getStringExtra("text") ?: ""
-        color = intent.getStringExtra("color") ?: ""
+        color = intent.getStringExtra("color") ?: "#3F51B5"
 
     }
 
-    private fun initUI() {
+    override fun initUI() {
 
-        // set data from previous notification
+        initCommonUI()
+
+        // load text
+        dialog_top_title.text = resources.getString(R.string.main_modify)
+        dialog_button_add.text = resources.getString(R.string.main_modify)
+
+        // load data from previous notification
         dialog_title.setText(title)
         dialog_text.setText(text)
-
-        val background: Drawable = dialog_color_preview.background
-        if(background is GradientDrawable) background.setColor(Color.parseColor(color))
-
-        dialog_color_container.setOnClickListener {
-
-            // open color picker dialog
-            val initialColor = Color.parseColor(color)
-
-            val alertDialogBuilder = AlertDialog.Builder(this@EditDialogActivity, R.style.DialogTheme)
-
-            val colorPickerView = ColorPicker(this)
-            colorPickerView.color = initialColor
-            alertDialogBuilder.setView(colorPickerView)
-
-            val onClickListener = DialogInterface.OnClickListener { dialog, which ->
-                when (which) {
-
-                    DialogInterface.BUTTON_POSITIVE -> {
-
-                        val selectedColor: Int = colorPickerView.color
-
-                        color = String.format("#%06X", 0xFFFFFF and selectedColor)
-
-                        val background: Drawable = dialog_color_preview.background
-                        if(background is GradientDrawable) background.setColor(Color.parseColor(color))
-
-                    }
-
-                    DialogInterface.BUTTON_NEGATIVE -> dialog.dismiss()
-
-                }
-            }
-            alertDialogBuilder.setPositiveButton(this.getString(android.R.string.ok), onClickListener)
-            alertDialogBuilder.setNegativeButton(this.getString(android.R.string.cancel), onClickListener)
-
-            val colorPickerDialog = alertDialogBuilder.create()
-            colorPickerDialog.show()
-
-        }
 
         dialog_button_add.setOnClickListener {
 
@@ -99,25 +53,16 @@ class EditDialogActivity : Activity() {
             text = dialog_text.text.toString()
 
             // update database
-            db.update(notiId.toInt(), title, text, color)
+            dao.updateNotification(id, title, text, color)
 
-            // create notification
-            val notifyIntent = Intent(this@EditDialogActivity, NotificationService::class.java)
-            notifyIntent.putExtra("id", notiId.toString())
-            notifyIntent.putExtra("title", title)
-            notifyIntent.putExtra("text", text)
-            notifyIntent.putExtra("color", color)
-            startService(notifyIntent)
+            val newNotification = Notification(id, title, text, color)
+            MainActivity.updateNotification(position, newNotification)
 
-            val newNotification = Notification(color, title, text)
-
-            MainActivity.notificationAdapter.updateItem(position, newNotification)
+            createNotification()
 
             finish()
 
         }
-
-        dialog_button_cancel.setOnClickListener { finish() }
 
     }
 
