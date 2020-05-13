@@ -65,7 +65,8 @@ class NotificationViewHolder(view: View, adapter: NotificationAdapter): Recycler
                         // delete from list
                         MainActivity.deleteNotification(adapterPosition)
 
-                        (context as MainActivity).showEmptyText()
+                        // show empty text if empty
+                        (context as MainActivity).setEmptyText()
 
                         Toast.makeText(context, context.getString(R.string.alert_deleted), Toast.LENGTH_SHORT).show()
 

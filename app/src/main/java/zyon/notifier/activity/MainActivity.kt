@@ -16,17 +16,29 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import zyon.notifier.R
 import zyon.notifier.adapter.NotificationAdapter
-import zyon.notifier.notification.Database
+import zyon.notifier.notification.DAO
 import zyon.notifier.notification.Notification
 import zyon.notifier.service.ReviveService
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
-
-    private val db: Database = Database(this)
+class MainActivity: AppCompatActivity() {
 
     companion object {
-        lateinit var notificationAdapter: NotificationAdapter
+
+        private lateinit var notificationAdapter: NotificationAdapter
+
+        fun updateNotification(position: Int, notification: Notification) {
+
+            notificationAdapter.updateItem(position, notification)
+
+        }
+
+        fun deleteNotification(position: Int) {
+
+            notificationAdapter.deleteItem(position)
+
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(main_toolbar)
         registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
 
-        setUI()
+        initUI()
         setList()
 
         // revive notifications
@@ -88,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setUI() {
+    private fun initUI() {
 
         // add button
         main_fab.setOnClickListener {
@@ -106,43 +118,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun setList() {
 
-        showNoText()
+        val dao = DAO(this)
+        val notificationList: ArrayList<Notification> = dao.getNotificationList()
 
-        val mArrayList: ArrayList<Notification> = ArrayList()
-
-        val cursor = db.selectAll()
-
-        cursor.moveToFirst()
-
-        for (i in 0 until cursor.count) {
-
-            val notification = Notification(
-                    cursor.getString(cursor.getColumnIndex("color")),
-                    cursor.getString(cursor.getColumnIndex("title")),
-                    cursor.getString(cursor.getColumnIndex("text"))
-            )
-
-            mArrayList.add(notification)
-
-            cursor.moveToNext()
-
-        }
-
-        cursor.close()
-
-        notificationAdapter = NotificationAdapter(mArrayList)
+        notificationAdapter = NotificationAdapter(notificationList)
         main_recycler.adapter = notificationAdapter
         notificationAdapter.notifyDataSetChanged()
 
+        setEmptyText()
+
     }
 
-    private fun showNoText() {
+    fun setEmptyText() {
 
-        val cursor = db.selectAll()
-
-        cursor.moveToFirst()
-
-        if(cursor.count == 0) {
+        if(notificationAdapter.itemCount == 0) {
 
             main_text_empty.visibility = View.VISIBLE
             main_container.visibility = View.GONE
@@ -153,8 +142,6 @@ class MainActivity : AppCompatActivity() {
             main_container.visibility = View.VISIBLE
 
         }
-
-        cursor.close()
 
     }
 

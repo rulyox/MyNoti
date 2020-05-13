@@ -3,7 +3,6 @@ package zyon.notifier.activity
 import android.app.Activity
 import android.content.*
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -16,12 +15,11 @@ import kotlinx.android.synthetic.main.activity_settings.*
 import zyon.notifier.R
 import zyon.notifier.service.QuickAddService
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity: AppCompatActivity() {
 
-    private var prefs: SharedPreferences? = null
-
-    private var notiColor = ""
-    private var qaShow = false
+    private lateinit var prefs: SharedPreferences
+    private var notificationColor = ""
+    private var qaUse = false
     private var qaColor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,11 +29,9 @@ class SettingsActivity : AppCompatActivity() {
 
         registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
 
-        setPrefs()
-
-        setNoti()
-
-        setQA()
+        loadPrefs()
+        initNotificationUI()
+        initQAUI()
 
     }
 
@@ -58,7 +54,7 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             R.id.menu_reset -> {
-                reset()
+                resetSettings()
                 return true
             }
 
@@ -81,28 +77,26 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    // preference settings
-    private fun setPrefs() {
+    private fun loadPrefs() {
 
         prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
 
-        notiColor = prefs!!.getString("NOTIFICATION_COLOR", "#3F51B5")!!
-        qaShow = prefs!!.getBoolean("QUICK_ADD_USE", false)
-        qaColor = prefs!!.getString("QUICK_ADD_COLOR", "#3F51B5")!!
+        notificationColor = prefs.getString("NOTIFICATION_COLOR", "#3F51B5")!!
+        qaUse = prefs.getBoolean("QUICK_ADD_USE", false)
+        qaColor = prefs.getString("QUICK_ADD_COLOR", "#3F51B5")!!
 
     }
 
-    // notification settings
-    private fun setNoti() {
+    private fun initNotificationUI() {
 
-        val background: Drawable = settings_color_preview.background
-        if(background is GradientDrawable) background.setColor(Color.parseColor(notiColor))
+        // color preview
+        val previewBackground = settings_color_preview.background as GradientDrawable
+        previewBackground.setColor(Color.parseColor(notificationColor))
 
-        // choose color
+        // color picker
         settings_color_container.setOnClickListener {
 
-            // open color picker dialog
-            val initialColor = Color.parseColor(notiColor)
+            val initialColor = Color.parseColor(notificationColor)
 
             val alertDialogBuilder = AlertDialog.Builder(this@SettingsActivity, R.style.DialogTheme)
 
@@ -117,13 +111,13 @@ class SettingsActivity : AppCompatActivity() {
 
                         val selectedColor: Int = colorPickerView.color
 
-                        notiColor = String.format("#%06X", 0xFFFFFF and selectedColor)
-                        val editor = prefs!!.edit()
-                        editor.putString("NOTIFICATION_COLOR", notiColor)
+                        notificationColor = String.format("#%06X", 0xFFFFFF and selectedColor)
+
+                        val editor = prefs.edit()
+                        editor.putString("NOTIFICATION_COLOR", notificationColor)
                         editor.apply()
 
-                        val background: Drawable = settings_color_preview.background
-                        if(background is GradientDrawable) background.setColor(Color.parseColor(notiColor))
+                        previewBackground.setColor(Color.parseColor(notificationColor))
 
                     }
 
@@ -141,33 +135,33 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
-    // quick add settings
-    private fun setQA() {
+    private fun initQAUI() {
 
-        val background: Drawable = settings_qa_color_preview.background
-        if(background is GradientDrawable) background.setColor(Color.parseColor(qaColor))
+        // color preview
+        val previewBackground = settings_qa_color_preview.background as GradientDrawable
+        previewBackground.setColor(Color.parseColor(qaColor))
 
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)
 
-        // activate
-        settings_switch_qa.isChecked = qaShow
+        // switch
+        settings_switch_qa.isChecked = qaUse
         settings_switch_qa.setOnCheckedChangeListener { buttonView, isChecked ->
 
             if (isChecked) Toast.makeText(this, getString(R.string.alert_qa_en), Toast.LENGTH_SHORT).show()
             else Toast.makeText(this, getString(R.string.alert_qa_dis), Toast.LENGTH_SHORT).show()
 
             if (isChecked) {
-                qaShow = true
+                qaUse = true
 
-                val editor = prefs!!.edit()
-                editor.putBoolean("QUICK_ADD_USE", qaShow)
+                val editor = prefs.edit()
+                editor.putBoolean("QUICK_ADD_USE", qaUse)
                 editor.apply()
 
             } else {
-                qaShow = false
+                qaUse = false
 
-                val editor = prefs!!.edit()
-                editor.putBoolean("QUICK_ADD_USE", qaShow)
+                val editor = prefs.edit()
+                editor.putBoolean("QUICK_ADD_USE", qaUse)
                 editor.apply()
             }
 
@@ -197,14 +191,14 @@ class SettingsActivity : AppCompatActivity() {
                         val selectedColor: Int = colorPickerView.color
 
                         qaColor = String.format("#%06X", 0xFFFFFF and selectedColor)
-                        val editor = prefs!!.edit()
+
+                        val editor = prefs.edit()
                         editor.putString("QUICK_ADD_COLOR", qaColor)
                         editor.apply()
-                        qaIntent.putExtra("check", qaShow.toString() + "")
+                        qaIntent.putExtra("check", qaUse.toString() + "")
                         startService(qaIntent)
 
-                        val background: Drawable = settings_qa_color_preview.background
-                        if(background is GradientDrawable) background.setColor(Color.parseColor(qaColor))
+                        previewBackground.setColor(Color.parseColor(qaColor))
 
                     }
 
@@ -222,27 +216,30 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
-    // reset settings to default
-    private fun reset() {
+    private fun resetSettings() {
 
-        notiColor = "#3F51B5"
-        qaShow = false
+        notificationColor = "#3F51B5"
+        qaUse = false
         qaColor = "#3F51B5"
 
-        val editor = prefs!!.edit()
-        editor.putString("NOTIFICATION_COLOR", notiColor)
-        editor.putBoolean("QUICK_ADD_USE", qaShow)
+        // reset prefs
+        val editor = prefs.edit()
+        editor.putString("NOTIFICATION_COLOR", notificationColor)
+        editor.putBoolean("QUICK_ADD_USE", qaUse)
         editor.putString("QUICK_ADD_COLOR", qaColor)
         editor.apply()
 
-        settings_switch_qa.isChecked = qaShow
+        // reset switch
+        settings_switch_qa.isChecked = qaUse
 
-        val notiColorBackground: Drawable = settings_color_preview.background
-        if(notiColorBackground is GradientDrawable) notiColorBackground.setColor(Color.parseColor(notiColor))
+        // reset colors
+        val notificationPreviewBackground = settings_color_preview.background as GradientDrawable
+        notificationPreviewBackground.setColor(Color.parseColor(notificationColor))
 
-        val qaColorBackground: Drawable = settings_qa_color_preview.background
-        if(qaColorBackground is GradientDrawable) qaColorBackground.setColor(Color.parseColor(qaColor))
+        val qaPreviewBackground = settings_qa_color_preview.background as GradientDrawable
+        qaPreviewBackground.setColor(Color.parseColor(qaColor))
 
+        // turn off quick add
         val qaIntent = Intent(this@SettingsActivity, QuickAddService::class.java)
         qaIntent.putExtra("use", false)
         startService(qaIntent)
