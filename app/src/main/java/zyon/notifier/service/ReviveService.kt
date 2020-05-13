@@ -5,19 +5,32 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import zyon.notifier.notification.DAO
+import zyon.notifier.notification.Notification
+import java.util.*
 
-import zyon.notifier.notification.Database
-
-class ReviveService : Service() {
+class ReviveService: Service() {
 
     override fun onBind(intent: Intent): IBinder? { return null }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
-        val prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
-        val qaBool = prefs.getBoolean("QUICK_ADD_USE", false)
+        loadQA()
+        loadNotification()
 
-        if(qaBool) {
+        this.stopSelf()
+
+        return startId
+
+    }
+
+    private fun loadQA() {
+
+        // load data from prefs
+        val prefs = getSharedPreferences(Activity::class.java.simpleName, Context.MODE_PRIVATE)
+        val useQA = prefs.getBoolean("QUICK_ADD_USE", false)
+
+        if(useQA) {
 
             val notifyQA = Intent(this@ReviveService, QuickAddService::class.java)
             notifyQA.putExtra("use", true)
@@ -25,35 +38,25 @@ class ReviveService : Service() {
 
         }
 
-        // database
-        val db = Database(this)
-        val cursor = db.selectAll()
-        cursor.moveToFirst()
+    }
 
-        for(i in 0 until cursor.count) {
+    private fun loadNotification() {
 
-            val id = cursor.getLong(cursor.getColumnIndex("id"))
-            val title = cursor.getString(cursor.getColumnIndex("title"))
-            val text = cursor.getString(cursor.getColumnIndex("text"))
-            val color = cursor.getString(cursor.getColumnIndex("color"))
+        val dao = DAO(this)
+        val notificationList: ArrayList<Notification> = dao.getNotificationList()
+
+        for(notification in notificationList) {
 
             // create notification
             val notifyIntent = Intent(this@ReviveService, NotificationService::class.java)
-            notifyIntent.putExtra("id", id.toString() + "")
-            notifyIntent.putExtra("title", title)
-            notifyIntent.putExtra("text", text)
-            notifyIntent.putExtra("color", color)
+            notifyIntent.putExtra("action", "create")
+            notifyIntent.putExtra("id", notification.id)
+            notifyIntent.putExtra("title", notification.title)
+            notifyIntent.putExtra("text", notification.text)
+            notifyIntent.putExtra("color", notification.color)
             startService(notifyIntent)
 
-            cursor.moveToNext()
-
         }
-
-        cursor.close()
-
-        this.stopSelf()
-
-        return startId
 
     }
 
