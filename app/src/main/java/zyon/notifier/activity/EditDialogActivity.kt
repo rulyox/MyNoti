@@ -5,6 +5,7 @@ import android.view.Window
 import kotlinx.android.synthetic.main.dialog.*
 import zyon.notifier.R
 import zyon.notifier.notification.DAO
+import zyon.notifier.adapter.NotificationAdapterObject
 import zyon.notifier.notification.Notification
 
 class EditDialogActivity: AbstractDialogActivity() {
@@ -56,7 +57,7 @@ class EditDialogActivity: AbstractDialogActivity() {
             dao.updateNotification(id, title, text, color)
 
             val newNotification = Notification(id, title, text, color)
-            MainActivity.updateNotification(position, newNotification)
+            NotificationAdapterObject.update(position, newNotification)
 
             createNotification()
 

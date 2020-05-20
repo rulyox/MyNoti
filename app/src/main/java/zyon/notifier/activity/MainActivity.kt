@@ -15,31 +15,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import zyon.notifier.R
-import zyon.notifier.adapter.NotificationAdapter
 import zyon.notifier.notification.DAO
+import zyon.notifier.adapter.NotificationAdapterObject
 import zyon.notifier.notification.Notification
 import zyon.notifier.service.ReviveService
 import java.util.*
 
 class MainActivity: AppCompatActivity() {
-
-    companion object {
-
-        private lateinit var notificationAdapter: NotificationAdapter
-
-        fun updateNotification(position: Int, notification: Notification) {
-
-            notificationAdapter.updateItem(position, notification)
-
-        }
-
-        fun deleteNotification(position: Int) {
-
-            notificationAdapter.deleteItem(position)
-
-        }
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,9 +103,9 @@ class MainActivity: AppCompatActivity() {
         val dao = DAO(this)
         val notificationList: ArrayList<Notification> = dao.getNotificationList()
 
-        notificationAdapter = NotificationAdapter(notificationList)
-        main_recycler.adapter = notificationAdapter
-        notificationAdapter.notifyDataSetChanged()
+        NotificationAdapterObject.init(notificationList)
+        main_recycler.adapter = NotificationAdapterObject.get()
+        NotificationAdapterObject.refresh()
 
         setEmptyText()
 
@@ -131,7 +113,7 @@ class MainActivity: AppCompatActivity() {
 
     fun setEmptyText() {
 
-        if(notificationAdapter.itemCount == 0) {
+        if(NotificationAdapterObject.get().itemCount == 0) {
 
             main_text_empty.visibility = View.VISIBLE
             main_container.visibility = View.GONE
