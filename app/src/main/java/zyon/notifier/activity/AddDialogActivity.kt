@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.view.Window
 import kotlinx.android.synthetic.main.dialog.*
 import zyon.notifier.R
-import zyon.notifier.notification.DAO
+import zyon.notifier.notification.NotificationDAO
 import zyon.notifier.notification.Notification
 
 class AddDialogActivity: AbstractDialogActivity() {
@@ -20,7 +20,7 @@ class AddDialogActivity: AbstractDialogActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog)
 
-        dao = DAO(this)
+        dao = NotificationDAO(this)
 
         loadPrefs()
         initUI()

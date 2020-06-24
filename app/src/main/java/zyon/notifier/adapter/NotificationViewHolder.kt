@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import zyon.notifier.R
 import zyon.notifier.activity.EditDialogActivity
 import zyon.notifier.activity.MainActivity
-import zyon.notifier.notification.DAO
+import zyon.notifier.notification.NotificationDAO
 import zyon.notifier.notification.Notification
 import zyon.notifier.service.NotificationService
 
@@ -29,7 +29,7 @@ class NotificationViewHolder(view: View, adapter: NotificationAdapter): Recycler
     init {
 
         val context = view.context
-        val dao = DAO(context)
+        val dao = NotificationDAO(context)
 
         // click anywhere
         parent.setOnClickListener {

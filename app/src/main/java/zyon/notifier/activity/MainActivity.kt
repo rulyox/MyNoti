@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import zyon.notifier.R
 import zyon.notifier.adapter.NotificationAdapter
-import zyon.notifier.notification.DAO
+import zyon.notifier.notification.NotificationDAO
 import zyon.notifier.notification.Notification
 import zyon.notifier.service.ReviveService
 import java.util.*
@@ -116,7 +116,7 @@ class MainActivity: AppCompatActivity() {
 
     private fun setList() {
 
-        val dao = DAO(this)
+        val dao = NotificationDAO(this)
         val notificationList: ArrayList<Notification> = dao.getNotificationList()
 
         initAdapter(notificationList)

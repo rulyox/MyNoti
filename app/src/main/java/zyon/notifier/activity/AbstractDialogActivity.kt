@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import com.chiralcode.colorpicker.ColorPicker
 import kotlinx.android.synthetic.main.dialog.*
 import zyon.notifier.R
-import zyon.notifier.notification.DAO
+import zyon.notifier.notification.NotificationDAO
 import zyon.notifier.service.NotificationService
 
 abstract class AbstractDialogActivity: Activity() {
@@ -18,7 +18,7 @@ abstract class AbstractDialogActivity: Activity() {
     var title = ""
     var text = ""
     var color = ""
-    lateinit var dao: DAO
+    lateinit var dao: NotificationDAO
 
     abstract fun initUI()
 

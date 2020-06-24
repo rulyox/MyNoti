@@ -5,7 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import zyon.notifier.notification.DAO
+import zyon.notifier.notification.NotificationDAO
 import zyon.notifier.notification.Notification
 import java.util.*
 
@@ -42,7 +42,7 @@ class ReviveService: Service() {
 
     private fun loadNotification() {
 
-        val dao = DAO(this)
+        val dao = NotificationDAO(this)
         val notificationList: ArrayList<Notification> = dao.getNotificationList()
 
         for(notification in notificationList) {

@@ -3,9 +3,9 @@ package zyon.notifier.notification
 import android.content.Context
 import java.util.ArrayList
 
-class DAO(context: Context) {
+class NotificationDAO(context: Context) {
 
-    private var db: Database = Database(context)
+    private var db = NotificationDatabase(context)
 
     fun getNotificationList(): ArrayList<Notification> {
 

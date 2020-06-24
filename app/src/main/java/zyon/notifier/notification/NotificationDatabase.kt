@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class Database(context: Context): SQLiteOpenHelper(context, "notification.db", null, 1) {
+class NotificationDatabase(context: Context): SQLiteOpenHelper(context, "notification.db", null, 1) {
 
     private val table = "notification"
 
