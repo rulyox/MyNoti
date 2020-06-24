@@ -1,10 +1,7 @@
 package zyon.notifier.activity
 
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,8 +12,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import zyon.notifier.R
-import zyon.notifier.notification.DAO
 import zyon.notifier.adapter.NotificationAdapterObject
+import zyon.notifier.notification.DAO
 import zyon.notifier.notification.Notification
 import zyon.notifier.service.ReviveService
 import java.util.*
@@ -26,9 +23,7 @@ class MainActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setSupportActionBar(main_toolbar)
-        registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
 
         initUI()
         setList()
@@ -38,7 +33,13 @@ class MainActivity: AppCompatActivity() {
 
     }
 
-    // menu
+    override fun onResume() {
+        super.onResume()
+
+        setList()
+
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -51,17 +52,6 @@ class MainActivity: AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(finishActivity)
-    }
-
-    private val finishActivity: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            finishAffinity()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

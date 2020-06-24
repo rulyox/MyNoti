@@ -24,7 +24,7 @@ class EditDialogActivity: AbstractDialogActivity() {
 
     }
 
-    override fun loadIntentData() {
+    private fun loadIntentData() {
 
         val intent = intent
 

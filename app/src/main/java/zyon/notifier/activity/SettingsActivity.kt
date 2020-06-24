@@ -1,7 +1,10 @@
 package zyon.notifier.activity
 
 import android.app.Activity
-import android.content.*
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -27,54 +30,29 @@ class SettingsActivity: AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        registerReceiver(finishActivity, IntentFilter("FINISH_ACTIVITY"))
-
         loadPrefs()
         initNotificationUI()
         initQAUI()
 
     }
 
-    // menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
         menuInflater.inflate(R.menu.menu_set, menu)
-
         return true
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
-
             android.R.id.home -> {
                 onBackPressed()
                 return true
             }
-
             R.id.menu_reset -> {
                 resetSettings()
                 return true
             }
-
         }
-
         return super.onOptionsItemSelected(item)
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        unregisterReceiver(finishActivity)
-
-    }
-
-    private val finishActivity: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            finishAffinity()
-        }
     }
 
     private fun loadPrefs() {

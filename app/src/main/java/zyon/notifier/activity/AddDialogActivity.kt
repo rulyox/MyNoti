@@ -22,17 +22,8 @@ class AddDialogActivity: AbstractDialogActivity() {
 
         dao = DAO(this)
 
-        loadIntentData()
         loadPrefs()
         initUI()
-
-    }
-
-    override fun loadIntentData() {
-
-        val intent = intent
-
-        if(intent.getBooleanExtra("qa", false)) sendBroadcast(Intent("FINISH_ACTIVITY"))
 
     }
 

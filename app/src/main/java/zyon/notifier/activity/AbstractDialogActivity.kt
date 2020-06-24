@@ -22,8 +22,6 @@ abstract class AbstractDialogActivity: Activity() {
 
     abstract fun initUI()
 
-    abstract fun loadIntentData()
-
     fun initCommonUI() {
 
         // color preview
