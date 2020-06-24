@@ -63,7 +63,7 @@ class NotificationViewHolder(view: View, adapter: NotificationAdapter): Recycler
                         dao.deleteNotification(notification.id)
 
                         // delete from list
-                        NotificationAdapterObject.delete(adapterPosition)
+                        MainActivity.deleteAdapter(adapterPosition)
 
                         // show empty text if empty
                         (context as MainActivity).setEmptyText()
