@@ -18,7 +18,6 @@ abstract class AbstractDialogActivity: Activity() {
     var title = ""
     var text = ""
     var color = ""
-    lateinit var dao: NotificationDAO
 
     abstract fun initUI()
 

@@ -20,8 +20,6 @@ class AddDialogActivity: AbstractDialogActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog)
 
-        dao = NotificationDAO(this)
-
         loadPrefs()
         initUI()
 
@@ -52,13 +50,14 @@ class AddDialogActivity: AbstractDialogActivity() {
 
             // save notification to database
             val newNotification = Notification(id, title, text, color)
-            dao.addNotification(newNotification)
+            NotificationDAO.addNotification(newNotification)
 
             // increase id in preferences
             val editor = prefs.edit()
             editor.putInt("NOTIFICATION_COUNT", id + 1)
             editor.apply()
 
+            MainActivity.refresh()
             createNotification()
 
             // close dialog

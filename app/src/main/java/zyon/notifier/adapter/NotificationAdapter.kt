@@ -9,27 +9,13 @@ import zyon.notifier.R
 import zyon.notifier.notification.Notification
 import java.util.*
 
-class NotificationAdapter(private val notificationList: ArrayList<Notification>?): RecyclerView.Adapter<NotificationViewHolder>() {
+class NotificationAdapter: RecyclerView.Adapter<NotificationViewHolder>() {
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationViewHolder {
+    private var notificationList: ArrayList<Notification>? = null
 
-        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item, viewGroup, false)
+    fun setList(notificationList: ArrayList<Notification>) {
 
-        return NotificationViewHolder(view, this)
-
-    }
-
-    override fun onBindViewHolder(viewholder: NotificationViewHolder, position: Int) {
-
-        if(notificationList == null) return
-
-        val notification = notificationList[position]
-
-        val previewBackground = viewholder.color.background as GradientDrawable
-        previewBackground.setColor(Color.parseColor(notification.color))
-
-        viewholder.title.text = notification.title
-        viewholder.text.text = notification.text
+        this.notificationList = notificationList
 
     }
 
@@ -39,17 +25,25 @@ class NotificationAdapter(private val notificationList: ArrayList<Notification>?
 
     }
 
-    fun updateItem(position: Int, notification: Notification) {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationViewHolder {
 
-        notificationList?.set(position, notification)
-        notifyItemChanged(position)
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item, viewGroup, false)
+
+        return NotificationViewHolder(view)
 
     }
 
-    fun deleteItem(position: Int) {
+    override fun onBindViewHolder(viewholder: NotificationViewHolder, position: Int) {
 
-        notificationList?.removeAt(position)
-        notifyItemRemoved(position)
+        if(notificationList == null) return
+
+        val notification = notificationList!![position]
+
+        val previewBackground = viewholder.color.background as GradientDrawable
+        previewBackground.setColor(Color.parseColor(notification.color))
+
+        viewholder.title.text = notification.title
+        viewholder.text.text = notification.text
 
     }
 

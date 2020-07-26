@@ -3,6 +3,7 @@ package zyon.notifier.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,26 +23,17 @@ class MainActivity: AppCompatActivity() {
 
     companion object {
 
-        private lateinit var adapter: NotificationAdapter
+        const val ACTIVITY_ADD = 0
+        const val ACTIVITY_EDIT = 1
 
-        fun initAdapter(notificationList: ArrayList<Notification>) {
-            adapter = NotificationAdapter(notificationList)
-        }
+        private val adapter = NotificationAdapter()
 
-        fun getAdapter(): NotificationAdapter {
-            return adapter
-        }
+        fun refresh() {
 
-        fun refreshAdapter() {
+            val notificationList: ArrayList<Notification> = NotificationDAO.getNotificationList()
+            adapter.setList(notificationList)
             adapter.notifyDataSetChanged()
-        }
 
-        fun updateAdapter(position: Int, notification: Notification) {
-            adapter.updateItem(position, notification)
-        }
-
-        fun deleteAdapter(position: Int) {
-            adapter.deleteItem(position)
         }
 
     }
@@ -51,18 +43,14 @@ class MainActivity: AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(main_toolbar)
 
+        NotificationDAO.initDB(application)
+
         initUI()
-        setList()
+        refresh()
+        setEmptyText()
 
         // revive notifications
         startService(Intent(this, ReviveService::class.java))
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        setList()
 
     }
 
@@ -85,10 +73,17 @@ class MainActivity: AppCompatActivity() {
 
         if (resultCode == Activity.RESULT_OK) {
 
-            setList()
+            if(requestCode == ACTIVITY_ADD) {
 
-            if(requestCode == 1) Toast.makeText(this, getString(R.string.alert_added), Toast.LENGTH_SHORT).show()
-            else if(requestCode == 2) Toast.makeText(this, getString(R.string.alert_modified), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.alert_added), Toast.LENGTH_SHORT).show()
+
+                setEmptyText()
+
+            } else if(requestCode == ACTIVITY_EDIT) {
+
+                Toast.makeText(this, getString(R.string.alert_modified), Toast.LENGTH_SHORT).show()
+
+            }
 
         } else {
 
@@ -104,32 +99,20 @@ class MainActivity: AppCompatActivity() {
         main_fab.setOnClickListener {
 
             val addDialogIntent = Intent(this@MainActivity, AddDialogActivity::class.java)
-            startActivityForResult(addDialogIntent, 1)
+            startActivityForResult(addDialogIntent, ACTIVITY_ADD)
 
         }
 
         // recycler view
         main_recycler.layoutManager = LinearLayoutManager(this)
         main_recycler.addItemDecoration(DividerItemDecoration(main_recycler.context, DividerItemDecoration.VERTICAL))
-
-    }
-
-    private fun setList() {
-
-        val dao = NotificationDAO(this)
-        val notificationList: ArrayList<Notification> = dao.getNotificationList()
-
-        initAdapter(notificationList)
-        main_recycler.adapter = getAdapter()
-        refreshAdapter()
-
-        setEmptyText()
+        main_recycler.adapter = adapter
 
     }
 
     fun setEmptyText() {
 
-        if(getAdapter().itemCount == 0) {
+        if(adapter.itemCount == 0) {
 
             main_text_empty.visibility = View.VISIBLE
             main_container.visibility = View.GONE

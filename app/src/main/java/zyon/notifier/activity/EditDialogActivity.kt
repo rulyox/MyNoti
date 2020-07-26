@@ -1,5 +1,6 @@
 package zyon.notifier.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import kotlinx.android.synthetic.main.dialog.*
@@ -15,8 +16,6 @@ class EditDialogActivity: AbstractDialogActivity() {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog)
-
-        dao = NotificationDAO(this)
 
         loadIntentData()
         initUI()
@@ -53,13 +52,13 @@ class EditDialogActivity: AbstractDialogActivity() {
             text = dialog_text.text.toString()
 
             // update database
-            dao.updateNotification(id, title, text, color)
+            NotificationDAO.updateNotification(id, title, text, color)
 
-            val newNotification = Notification(id, title, text, color)
-            MainActivity.updateAdapter(position, newNotification)
-
+            MainActivity.refresh()
             createNotification()
 
+            // close dialog
+            setResult(RESULT_OK, Intent())
             finish()
 
         }

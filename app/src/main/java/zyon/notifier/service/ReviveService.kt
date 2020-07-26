@@ -15,6 +15,8 @@ class ReviveService: Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
+        NotificationDAO.initDB(application)
+
         loadQA()
         loadNotification()
 
@@ -42,8 +44,7 @@ class ReviveService: Service() {
 
     private fun loadNotification() {
 
-        val dao = NotificationDAO(this)
-        val notificationList: ArrayList<Notification> = dao.getNotificationList()
+        val notificationList: ArrayList<Notification> = NotificationDAO.getNotificationList()
 
         for(notification in notificationList) {
 
