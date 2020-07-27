@@ -54,7 +54,6 @@ class EditDialogActivity: AbstractDialogActivity() {
             // update database
             NotificationDAO.updateNotification(id, title, text, color)
 
-            MainActivity.refresh()
             createNotification()
 
             // close dialog

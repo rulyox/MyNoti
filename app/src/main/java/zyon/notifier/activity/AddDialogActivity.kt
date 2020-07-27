@@ -57,7 +57,6 @@ class AddDialogActivity: AbstractDialogActivity() {
             editor.putInt("NOTIFICATION_COUNT", id + 1)
             editor.apply()
 
-            MainActivity.refresh()
             createNotification()
 
             // close dialog

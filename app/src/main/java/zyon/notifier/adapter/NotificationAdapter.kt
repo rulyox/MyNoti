@@ -9,7 +9,7 @@ import zyon.notifier.R
 import zyon.notifier.notification.Notification
 import java.util.*
 
-class NotificationAdapter: RecyclerView.Adapter<NotificationViewHolder>() {
+class NotificationAdapter(val clickListener: NotificationClickListener): RecyclerView.Adapter<NotificationViewHolder>() {
 
     private var notificationList: ArrayList<Notification>? = null
 
@@ -29,7 +29,7 @@ class NotificationAdapter: RecyclerView.Adapter<NotificationViewHolder>() {
 
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item, viewGroup, false)
 
-        return NotificationViewHolder(view)
+        return NotificationViewHolder(this, view)
 
     }
 

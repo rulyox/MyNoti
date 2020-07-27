@@ -15,6 +15,7 @@ class ReviveService: Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
+        // init dao and db
         NotificationDAO.initDB(application)
 
         loadQA()
