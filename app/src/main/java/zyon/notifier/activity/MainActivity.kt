@@ -50,6 +50,15 @@ class MainActivity: AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // update notifications added with quick add
+        refreshAdapter()
+        setEmptyText()
+
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
